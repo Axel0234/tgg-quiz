@@ -167,7 +167,7 @@
     from { opacity: 0; transform: scaleY(0.7); }
     to   { opacity: 1; transform: scaleY(1); }
   }
-  .next-btn.show { display: block; animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both; }
+  .next-btn.show { animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both; }
 
   /* ===== RESULTS SCREEN ===== */
   @keyframes scoreCountUp {
@@ -727,10 +727,9 @@
     border-left: 2px solid var(--gold);
     background: rgba(201,168,76,0.05);
     display: none;
+    animation: fadeSlide 0.25s ease;
   }
   .answer-reveal.show { display: block; }
-  .answer-reveal.correct-state { border-left-color: #4CAF7A; background: rgba(76,175,122,0.05); }
-  .answer-reveal.incorrect-state { border-left-color: #CF5252; background: rgba(207,82,82,0.05); }
   .reveal-label {
     font-family: 'Josefin Sans', sans-serif;
     font-size: 9px;
@@ -739,24 +738,12 @@
     color: var(--gold);
     margin-bottom: 6px;
   }
-  .answer-reveal.correct-state .reveal-label { color: #4CAF7A; }
-  .answer-reveal.incorrect-state .reveal-label { color: #CF5252; }
   .reveal-text {
     font-family: 'Cormorant Garamond', serif;
     font-size: 17px;
     color: var(--cream);
     line-height: 1.5;
   }
-  .reveal-explanation {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 15px;
-    color: var(--text-dim);
-    line-height: 1.6;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(201,168,76,0.15);
-  }
-  .reveal-explanation:empty { display: none; }
 
   /* Override buttons */
   .override-row {
@@ -1370,9 +1357,8 @@
     <div class="question-text" id="questionText"></div>
     <div id="answersArea"></div>
     <div class="answer-reveal" id="answerReveal">
-      <div class="reveal-label" id="revealLabel">Correct Answer</div>
+      <div class="reveal-label">Correct Answer</div>
       <div class="reveal-text" id="revealText"></div>
-      <div class="reveal-explanation" id="revealExplanation"></div>
     </div>
     <div class="override-row" id="overrideRow" style="display:none">
       <span class="override-label">Override Result:</span>
@@ -1841,7 +1827,7 @@ function renderQuestion() {
   document.getElementById('qTypeTag').textContent = typeLabels[q.type];
   document.getElementById('questionText').textContent = q.q;
   document.getElementById('progressBar').style.width = ((currentIdx / quizQuestions.length) * 100) + '%';
-  document.getElementById('answerReveal').classList.remove('show', 'correct-state', 'incorrect-state');
+  document.getElementById('answerReveal').classList.remove('show');
   document.getElementById('overrideRow').style.display = 'none';
   document.getElementById('nextBtn').classList.remove('show');
   document.getElementById('overrideCorrect').classList.remove('active');
@@ -1905,7 +1891,6 @@ function handleMC(chosen, correct, clickedBtn, list) {
   const isCorrect = chosen === correct;
   if (isCorrect) score++;
   updateScoreDisplay();
-  showReveal(isCorrect, quizQuestions[currentIdx]);
   showOverride(isCorrect);
   document.getElementById('nextBtn').classList.add('show');
 }
@@ -1917,13 +1902,17 @@ function handleTF(chosen, correct, clickedBtn, wrap, q) {
   buttons.forEach(b => b.disabled = true);
   const isCorrect = chosen === correct;
   clickedBtn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  // Find correct button
   buttons.forEach(b => {
     const bIsTrue = b.querySelector('.opt-letter').textContent === 'T';
-    if (bIsTrue === correct && b !== clickedBtn) b.classList.add('correct');
+    if (bIsTrue === correct) b.classList.add(b === clickedBtn ? '' : 'reveal-correct');
   });
+  if (!isCorrect && q.correctText) {
+    document.getElementById('revealText').textContent = q.correctText;
+    document.getElementById('answerReveal').classList.add('show');
+  }
   if (isCorrect) score++;
   updateScoreDisplay();
-  showReveal(isCorrect, q);
   showOverride(isCorrect);
   document.getElementById('nextBtn').classList.add('show');
 }
@@ -1935,36 +1924,17 @@ function handleSA(q, val) {
   if (input) input.disabled = true;
   const submitBtn = document.querySelector('.submit-answer-btn');
   if (submitBtn) submitBtn.disabled = true;
-  showReveal(null, q);
+
+  // Show correct answer
+  document.getElementById('revealText').textContent = q.ans;
+  document.getElementById('answerReveal').classList.add('show');
+
+  // For SA/ID, we don't auto-score — user must override
   showOverride(null);
   document.getElementById('nextBtn').classList.add('show');
 }
 
-function showReveal(isCorrect, q) {
-  const box = document.getElementById('answerReveal');
-  const label = document.getElementById('revealLabel');
-  const text = document.getElementById('revealText');
-  const expl = document.getElementById('revealExplanation');
-
-  box.classList.remove('correct-state', 'incorrect-state');
-  if (isCorrect === true)       { box.classList.add('correct-state');   label.textContent = '✓ Correct'; }
-  else if (isCorrect === false) { box.classList.add('incorrect-state'); label.textContent = '✗ Incorrect'; }
-  else                          { label.textContent = 'Correct Answer'; }
-
-  // For MC, show the correct option text; for TF show True/False; for SA/ID show the answer
-  if (q.type === 'mc') {
-    text.textContent = q.opts[q.ans];
-  } else if (q.type === 'tf') {
-    text.textContent = q.ans ? 'True' : 'False';
-  } else {
-    text.textContent = q.ans;
-  }
-
-  expl.textContent = q.explanation || '';
-  box.classList.add('show');
-}
-
-
+function showOverride(autoResult) {
   const row = document.getElementById('overrideRow');
   row.style.display = 'flex';
   if (autoResult === true) {
