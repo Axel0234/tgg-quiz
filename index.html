@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Great Gatsby — Study Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dark: #8B6914;
+    --navy: #0D1B2A;
+    --navy-mid: #152238;
+    --navy-light: #1E3354;
+    --cream: #F5EDD6;
+    --cream-dark: #E8D9B5;
+    --emerald: #1A4A3A;
+    --white: #FDF8EC;
+    --text-dim: rgba(245,237,214,0.55);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background: var(--navy);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* ===== DECO BACKGROUND ===== */
+  #gatsby-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .screen {
+    visibility: hidden;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: transparent;
+    pointer-events: none;
+  }
+  .screen.active { visibility: visible; pointer-events: auto; }
+
+  /* ===== SCREEN TRANSITIONS ===== */
+  .screen {
+    visibility: hidden;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: transparent;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.45s ease, visibility 0.45s;
+  }
+  .screen.active {
+    visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
+  }
+  .screen.exiting {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ===== HOME ENTRANCE ANIMATIONS ===== */
+  @keyframes heroReveal {
+    from { opacity: 0; transform: translateY(-24px); letter-spacing: 12px; }
+    to   { opacity: 1; transform: translateY(0);     letter-spacing: normal; }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes decoExpand {
+    from { opacity: 0; transform: scaleX(0); }
+    to   { opacity: 1; transform: scaleX(1); }
+  }
+  @keyframes panelRise {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #home.animate-in .hero-eyebrow {
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+  #home.animate-in .hero-title {
+    animation: heroReveal 0.7s cubic-bezier(0.16,1,0.3,1) 0.25s both;
+  }
+  #home.animate-in .deco-line {
+    animation: decoExpand 0.6s ease 0.7s both;
+    transform-origin: center;
+  }
+  #home.animate-in .hero-sub {
+    animation: fadeUp 0.5s ease 0.85s both;
+  }
+  #home.animate-in .config-panel {
+    animation: panelRise 0.65s cubic-bezier(0.16,1,0.3,1) 0.5s both;
+  }
+
+  /* ===== CHAPTER BUTTON ENTRANCE ===== */
+  #home.animate-in .chapter-btn:nth-child(1) { animation: fadeUp 0.4s ease 0.6s both; }
+  #home.animate-in .chapter-btn:nth-child(2) { animation: fadeUp 0.4s ease 0.68s both; }
+  #home.animate-in .chapter-btn:nth-child(3) { animation: fadeUp 0.4s ease 0.76s both; }
+  #home.animate-in .chapter-btn:nth-child(4) { animation: fadeUp 0.4s ease 0.84s both; }
+  #home.animate-in .chapter-btn:nth-child(5) { animation: fadeUp 0.4s ease 0.92s both; }
+
+  /* ===== TYPE BUTTON ENTRANCE ===== */
+  #home.animate-in .type-btn:nth-child(1) { animation: fadeUp 0.4s ease 0.75s both; }
+  #home.animate-in .type-btn:nth-child(2) { animation: fadeUp 0.4s ease 0.83s both; }
+  #home.animate-in .type-btn:nth-child(3) { animation: fadeUp 0.4s ease 0.91s both; }
+  #home.animate-in .type-btn:nth-child(4) { animation: fadeUp 0.4s ease 0.99s both; }
+
+  /* ===== QUESTION CARD TRANSITIONS ===== */
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideOutLeft {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(-40px); }
+  }
+  .question-card.slide-in  { animation: slideInRight 0.38s cubic-bezier(0.16,1,0.3,1) both; }
+  .question-card.slide-out { animation: slideOutLeft 0.25s ease both; }
+
+  /* ===== CORRECT / INCORRECT FLASH ===== */
+  @keyframes correctFlash {
+    0%   { box-shadow: 0 0 0 0 rgba(76,175,122,0); }
+    30%  { box-shadow: 0 0 0 8px rgba(76,175,122,0.35); }
+    100% { box-shadow: 0 0 0 0 rgba(76,175,122,0); }
+  }
+  @keyframes incorrectFlash {
+    0%   { box-shadow: 0 0 0 0 rgba(207,82,82,0); }
+    30%  { box-shadow: 0 0 0 8px rgba(207,82,82,0.35); }
+    100% { box-shadow: 0 0 0 0 rgba(207,82,82,0); }
+  }
+  .option-btn.correct   { animation: correctFlash   0.6s ease forwards; }
+  .option-btn.incorrect { animation: incorrectFlash 0.6s ease forwards; }
+
+  /* ===== ANSWER REVEAL SLIDE ===== */
+  @keyframes revealSlide {
+    from { opacity: 0; transform: translateY(-8px); max-height: 0; }
+    to   { opacity: 1; transform: translateY(0);    max-height: 200px; }
+  }
+  .answer-reveal.show { animation: revealSlide 0.3s ease both; }
+
+  /* ===== NEXT BUTTON POP ===== */
+  @keyframes popIn {
+    from { opacity: 0; transform: scaleY(0.7); }
+    to   { opacity: 1; transform: scaleY(1); }
+  }
+  .next-btn.show { animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+  /* ===== RESULTS SCREEN ===== */
+  @keyframes scoreCountUp {
+    from { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+    to   { opacity: 1; transform: scale(1)   rotate(0deg); }
+  }
+  @keyframes resultsTitleDrop {
+    from { opacity: 0; transform: translateY(-30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes quoteSlide {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes btnsFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  #results.animate-in .results-title    { animation: resultsTitleDrop 0.55s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+  #results.animate-in .results-subtitle { animation: fadeUp 0.4s ease 0.3s both; }
+  #results.animate-in .deco-line        { animation: decoExpand 0.5s ease 0.45s both; transform-origin: center; }
+  #results.animate-in .score-circle     { animation: scoreCountUp 0.65s cubic-bezier(0.34,1.56,0.64,1) 0.55s both; }
+  #results.animate-in .result-quote     { animation: quoteSlide 0.5s ease 0.9s both; }
+  #results.animate-in .results-actions  { animation: btnsFadeUp 0.4s ease 1.1s both; }
+
+  /* ===== CONFETTI PARTICLES ===== */
+  .confetti-particle {
+    position: fixed;
+    width: 8px; height: 8px;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+  }
+  @keyframes confettiFall {
+    0%   { opacity: 1; transform: translateY(-20px) rotate(0deg) scale(1); }
+    80%  { opacity: 0.8; }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.5); }
+  }
+
+  /* ===== BACKGROUND ANIMATIONS ===== */
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50%       { opacity: 1; }
+  }
+  @keyframes greenPulse {
+    0%, 100% { opacity: 0.9; r: 7; }
+    50%       { opacity: 0.5; r: 10; }
+  }
+  @keyframes ashDrift {
+    0%   { transform: translateX(0)   translateY(0); }
+    50%  { transform: translateX(8px) translateY(-5px); }
+    100% { transform: translateX(0)   translateY(0); }
+  }
+  @keyframes mansionGlow {
+    0%, 100% { opacity: 0.08; }
+    50%       { opacity: 0.14; }
+  }
+
+  /* ===== SCORE STRIP COUNT ANIMATION ===== */
+  @keyframes scorePopBump {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.25); color: var(--gold-light); }
+    100% { transform: scale(1); }
+  }
+  .score-bump { animation: scorePopBump 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+
+  /* ===== START BUTTON SHINE ===== */
+  .start-btn {
+    position: relative;
+    overflow: hidden;
+  }
+  .start-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transform: skewX(-20deg);
+    transition: none;
+  }
+  .start-btn:hover::after {
+    animation: shineSwipe 0.55s ease forwards;
+  }
+  @keyframes shineSwipe {
+    from { left: -100%; }
+    to   { left: 160%; }
+  }
+
+  /* ===== POOL NOTICE BOUNCE IN ===== */
+  @keyframes noticeAppear {
+    from { opacity: 0; transform: scaleY(0.7); }
+    to   { opacity: 1; transform: scaleY(1); }
+  }
+  .pool-notice.show { animation: noticeAppear 0.25s cubic-bezier(0.34,1.56,0.64,1) both; }
+  .deco-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+    line-height: 0;
+  }
+  .deco-line::before, .deco-line::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .deco-diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    display: block;
+    margin-top: 0;
+  }
+
+  /* ===== HOME SCREEN ===== */
+  #home {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 8vw, 80px);
+    font-weight: 900;
+    line-height: 0.95;
+    color: var(--cream);
+    text-shadow: 0 0 60px rgba(201,168,76,0.3);
+    margin-bottom: 4px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-top: 12px;
+  }
+
+  /* ===== CONFIG PANEL ===== */
+  .config-panel {
+    background: rgba(10,18,32,0.88);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 2px;
+    padding: 36px 40px;
+    width: 100%;
+    max-width: 620px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,168,76,0.1);
+  }
+
+  .section-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  /* Chapter selector */
+  .chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .chapter-btn {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--cream-dark);
+    padding: 12px 6px;
+    cursor: pointer;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .chapter-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.2s;
+    z-index: 0;
+  }
+  .chapter-btn span { position: relative; z-index: 1; }
+  .chapter-btn:hover { border-color: var(--gold); color: var(--navy); }
+  .chapter-btn:hover::before { transform: scaleY(1); }
+  .chapter-btn.selected { border-color: var(--gold); color: var(--navy); }
+  .chapter-btn.selected::before { transform: scaleY(1); }
+
+  .chapter-sub {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 8px;
+    letter-spacing: 1px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* Question count slider */
+  .slider-container { margin-bottom: 28px; }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .slider-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .slider-value span {
+    font-size: 13px;
+    font-family: 'Josefin Sans', sans-serif;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+  }
+
+  .slider-wrapper {
+    position: relative;
+    height: 20px;
+    display: flex;
+    align-items: center;
+  }
+  .slider-track-bg {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: rgba(201,168,76,0.2);
+    pointer-events: none;
+  }
+  .slider-track-fill {
+    position: absolute;
+    left: 0;
+    height: 2px;
+    background: var(--gold);
+    pointer-events: none;
+    transition: width 0.05s;
+  }
+  .slider-thumb {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    pointer-events: none;
+    box-shadow: 0 0 12px rgba(201,168,76,0.5);
+    margin-left: -7px;
+    transition: left 0.05s;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    position: absolute;
+    left: 0; right: 0;
+    width: 100%;
+    height: 20px;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    background: transparent;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    background: transparent;
+    height: 2px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-track {
+    background: transparent;
+    height: 2px;
+  }
+
+  /* Question types */
+  .type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .type-btn {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--cream-dark);
+    padding: 11px 14px;
+    cursor: pointer;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .type-btn .type-icon { font-size: 16px; flex-shrink: 0; }
+  .type-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+  .type-btn.selected { border-color: var(--gold); background: rgba(201,168,76,0.1); color: var(--gold-light); }
+  .type-btn.selected::after {
+    content: '◆';
+    margin-left: auto;
+    font-size: 8px;
+    color: var(--gold);
+  }
+
+  /* Start button */
+  .start-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    border: none;
+    color: var(--navy);
+    padding: 16px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .start-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+  }
+  .start-btn:active { transform: translateY(0); }
+  .start-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ===== QUIZ SCREEN ===== */
+  #quiz {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 20px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
+  .back-btn {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    padding: 8px 16px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .back-btn:hover { background: rgba(201,168,76,0.1); }
+
+  .progress-area { text-align: right; }
+  .progress-fraction {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .progress-fraction strong {
+    font-size: 22px;
+    color: var(--gold-light);
+  }
+
+  .progress-bar-wrap {
+    height: 2px;
+    background: rgba(201,168,76,0.15);
+    margin-top: 4px;
+    width: 160px;
+    margin-left: auto;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+
+  /* Question card */
+  .question-card {
+    background: rgba(10,18,32,0.88);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 36px;
+    margin-bottom: 20px;
+    flex: 1;
+    backdrop-filter: blur(12px);
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .q-chapter-tag {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 3px 8px;
+  }
+
+  .q-type-tag {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 3px 8px;
+  }
+
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 3vw, 24px);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--cream);
+    margin-bottom: 28px;
+  }
+
+  /* Answer options */
+  .options-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--cream-dark);
+    padding: 14px 18px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    line-height: 1.4;
+    transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .option-btn .opt-letter {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 3px;
+    min-width: 20px;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(201,168,76,0.06); }
+  .option-btn.correct { border-color: #4CAF7A; background: rgba(76,175,122,0.12); color: #7DDFAA; }
+  .option-btn.incorrect { border-color: #CF5252; background: rgba(207,82,82,0.12); color: #F08080; }
+  .option-btn.reveal-correct { border-color: rgba(76,175,122,0.5); background: rgba(76,175,122,0.06); color: #7DDFAA; }
+  .option-btn:disabled { cursor: default; }
+
+  /* True/False */
+  .tf-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Short answer */
+  .short-answer-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .short-answer-input {
+    background: rgba(13,27,42,0.8);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--cream);
+    padding: 14px 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s;
+  }
+  .short-answer-input:focus { border-color: var(--gold); }
+  .short-answer-input::placeholder { color: var(--text-dim); font-style: italic; }
+
+  .submit-answer-btn {
+    background: var(--gold-dark);
+    border: 1px solid var(--gold);
+    color: var(--cream);
+    padding: 12px 28px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-self: flex-start;
+  }
+  .submit-answer-btn:hover { background: var(--gold); color: var(--navy); }
+
+  /* Answer reveal area */
+  .answer-reveal {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-left: 2px solid var(--gold);
+    background: rgba(201,168,76,0.05);
+    display: none;
+    animation: fadeSlide 0.25s ease;
+  }
+  .answer-reveal.show { display: block; }
+  .reveal-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .reveal-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--cream);
+    line-height: 1.5;
+  }
+
+  /* Override buttons */
+  .override-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+  .override-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    flex: 1;
+  }
+  .override-correct-btn, .override-incorrect-btn {
+    padding: 6px 14px;
+    border: 1px solid;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .override-correct-btn { border-color: rgba(76,175,122,0.5); color: #7DDFAA; }
+  .override-correct-btn:hover { background: rgba(76,175,122,0.15); }
+  .override-correct-btn.active { background: rgba(76,175,122,0.2); }
+  .override-incorrect-btn { border-color: rgba(207,82,82,0.5); color: #F08080; }
+  .override-incorrect-btn:hover { background: rgba(207,82,82,0.15); }
+  .override-incorrect-btn.active { background: rgba(207,82,82,0.2); }
+
+  /* Next button */
+  .next-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold);
+    padding: 14px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 14px;
+    display: none;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
+  /* Score strip */
+  .score-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    margin-top: 4px;
+  }
+  .score-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .score-numbers {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--gold-light);
+  }
+  .score-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-left: 6px;
+  }
+
+  /* ===== RESULTS SCREEN ===== */
+  #results {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  .results-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .results-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-bottom: 36px;
+  }
+
+  .score-circle {
+    width: 180px;
+    height: 180px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 36px;
+    position: relative;
+    box-shadow: 0 0 40px rgba(201,168,76,0.2), inset 0 0 40px rgba(201,168,76,0.03);
+  }
+  .score-circle::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+  .score-pct-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .score-frac {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .result-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--cream-dark);
+    max-width: 480px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+    padding: 0 20px;
+    border-left: 2px solid var(--gold);
+    text-align: left;
+  }
+
+  .results-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+
+  .results-btn {
+    padding: 14px 32px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--gold);
+  }
+  .results-btn.primary { background: var(--gold); color: var(--navy); font-weight: 600; }
+  .results-btn.primary:hover { background: var(--gold-light); }
+  .results-btn.secondary { background: transparent; color: var(--gold); }
+  .results-btn.secondary:hover { background: rgba(201,168,76,0.1); }
+
+  /* ===== UTILS ===== */
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent); margin: 22px 0; }
+
+  .select-all-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .mini-btn {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--text-dim);
+    padding: 5px 12px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .mini-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .error-msg {
+    background: rgba(207,82,82,0.1);
+    border: 1px solid rgba(207,82,82,0.4);
+    color: #F08080;
+    padding: 10px 16px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 12px;
+    display: none;
+    text-align: center;
+  }
+  .error-msg.show { display: block; }
+
+  .pool-notice {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 8px 14px;
+    border: 1px solid rgba(201,168,76,0.35);
+    background: rgba(201,168,76,0.06);
+  }
+  .pool-notice.show { display: flex; }
+  .pool-notice-icon { font-size: 13px; flex-shrink: 0; }
+  .pool-notice-text {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    line-height: 1.6;
+  }
+  .pool-notice-text strong { color: var(--gold-light); }
+  .claude-disclaimer {
+    text-align: center;
+    margin-top: 16px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .claude-disclaimer a {
+    color: var(--gold);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .claude-disclaimer a:hover { color: var(--gold-light); }
+</style>
+</head>
+<body>
+
+<!-- ===== GATSBY BACKGROUND ===== -->
+<div id="gatsby-bg">
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="skyGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#0D1F35"/>
+      <stop offset="100%" stop-color="#060E18"/>
+    </radialGradient>
+    <radialGradient id="greenGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00FF88" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#00CC66" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#00CC66" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ashGlow" cx="50%" cy="80%" r="60%">
+      <stop offset="0%" stop-color="#888880" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#888880" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <filter id="blur6">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="blur12">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+    <filter id="eyeGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="screenClip">
+      <rect width="1440" height="900"/>
+    </clipPath>
+  </defs>
+
+  <!-- Sky base -->
+  <rect width="1440" height="900" fill="url(#skyGrad)"/>
+
+  <!-- Stars scattered -->
+  <g opacity="0.75">
+    <circle cx="120" cy="60" r="1.5" fill="#C9A84C" style="animation:twinkle 3.1s ease-in-out infinite"/><circle cx="240" cy="30" r="1.2" fill="white" style="animation:twinkle 2.4s ease-in-out 0.5s infinite"/>
+    <circle cx="380" cy="80" r="1.5" fill="white" style="animation:twinkle 3.8s ease-in-out 1s infinite"/><circle cx="500" cy="20" r="1" fill="#C9A84C" style="animation:twinkle 2.9s ease-in-out 0.3s infinite"/>
+    <circle cx="650" cy="55" r="1.8" fill="white" style="animation:twinkle 4.2s ease-in-out 0.8s infinite"/><circle cx="800" cy="35" r="1.2" fill="white" style="animation:twinkle 3.3s ease-in-out 1.5s infinite"/>
+    <circle cx="950" cy="70" r="1.5" fill="#C9A84C" style="animation:twinkle 2.7s ease-in-out 0.2s infinite"/><circle cx="1100" cy="25" r="1.3" fill="white" style="animation:twinkle 3.6s ease-in-out 0.9s infinite"/>
+    <circle cx="1250" cy="60" r="1.5" fill="white" style="animation:twinkle 4.0s ease-in-out 0.4s infinite"/><circle cx="1380" cy="40" r="1" fill="#C9A84C" style="animation:twinkle 2.5s ease-in-out 1.2s infinite"/>
+    <circle cx="70" cy="120" r="1" fill="white" style="animation:twinkle 3.4s ease-in-out 0.6s infinite"/><circle cx="310" cy="140" r="1.2" fill="white" style="animation:twinkle 2.8s ease-in-out 1.8s infinite"/>
+    <circle cx="460" cy="110" r="1" fill="#C9A84C" style="animation:twinkle 3.9s ease-in-out 0.1s infinite"/><circle cx="720" cy="130" r="1.3" fill="white" style="animation:twinkle 3.1s ease-in-out 1.1s infinite"/>
+    <circle cx="1050" cy="100" r="1" fill="white" style="animation:twinkle 4.5s ease-in-out 0.7s infinite"/><circle cx="1320" cy="115" r="1.5" fill="#C9A84C" style="animation:twinkle 2.6s ease-in-out 1.4s infinite"/>
+    <circle cx="170" cy="90" r="1" fill="white" style="animation:twinkle 3.7s ease-in-out 0.3s infinite"/><circle cx="850" cy="90" r="1.2" fill="#C9A84C" style="animation:twinkle 3.2s ease-in-out 1.6s infinite"/>
+    <circle cx="1180" cy="80" r="1" fill="white" style="animation:twinkle 4.1s ease-in-out 0.8s infinite"/><circle cx="420" cy="50" r="1" fill="white" style="animation:twinkle 2.9s ease-in-out 2.0s infinite"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- WATER / BAY (bottom band) -->
+  <!-- ============================================================ -->
+  <rect x="0" y="720" width="1440" height="180" fill="#050F1C" opacity="0.95"/>
+  <!-- water shimmer lines -->
+  <g opacity="0.3" stroke="#C9A84C" stroke-width="1">
+    <line x1="0" y1="745" x2="1440" y2="745"/>
+    <line x1="0" y1="768" x2="1440" y2="768"/>
+    <line x1="0" y1="792" x2="1440" y2="792"/>
+    <line x1="0" y1="818" x2="1440" y2="818"/>
+    <line x1="0" y1="848" x2="1440" y2="848"/>
+    <line x1="0" y1="875" x2="1440" y2="875"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- GREEN LIGHT — Daisy's dock, right side -->
+  <!-- ============================================================ -->
+  <circle cx="1310" cy="718" r="90" fill="url(#greenGlow)" filter="url(#blur12)"/>
+  <circle cx="1310" cy="718" r="45" fill="#00FF88" opacity="0.25" filter="url(#blur6)"/>
+  <!-- dock post -->
+  <rect x="1308" y="720" width="5" height="90" fill="#1A3828" opacity="1"/>
+  <!-- lamp housing -->
+  <rect x="1301" y="706" width="18" height="14" rx="2" fill="#1A3020"/>
+  <!-- green bulb glow -->
+  <circle cx="1310" cy="713" r="10" fill="#00FF88" opacity="0.8" filter="url(#blur2)" style="animation:twinkle 2s ease-in-out infinite"/>
+  <circle cx="1310" cy="713" r="5" fill="#CCFFDD" style="animation:twinkle 2s ease-in-out 0.3s infinite"/>
+  <!-- water reflection streak -->
+  <rect x="1308" y="722" width="5" height="80" fill="#00FF88" opacity="0.18" filter="url(#blur6)"/>
+  <ellipse cx="1310" cy="790" rx="22" ry="8" fill="#00FF88" opacity="0.2" filter="url(#blur6)"/>
+  <!-- label -->
+  <text x="1310" y="698" font-family="Georgia, serif" font-size="10" fill="#55FFAA" opacity="0.75" letter-spacing="2" text-anchor="middle" font-style="italic">Daisy's Dock</text>
+
+  <!-- ============================================================ -->
+  <!-- GATSBY'S MANSION — right background -->
+  <!-- ============================================================ -->
+  <g opacity="0.7">
+    <!-- main body -->
+    <rect x="980" y="490" width="340" height="230" fill="#1E3550"/>
+    <!-- pediment / roof -->
+    <polygon points="955,490 1150,395 1345,490" fill="#162840"/>
+    <!-- pediment gold trim -->
+    <line x1="975" y1="490" x2="1325" y2="490" stroke="#C9A84C" stroke-width="2" opacity="0.8"/>
+    <line x1="1005" y1="462" x2="1295" y2="462" stroke="#C9A84C" stroke-width="1" opacity="0.5"/>
+    <!-- columns -->
+    <rect x="1005" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
+    <rect x="1048" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
+    <rect x="1091" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
+    <rect x="1248" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
+    <rect x="1291" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
+    <!-- lit windows row 1 -->
+    <rect x="1028" y="515" width="32" height="44" fill="#E8C84A" opacity="0.7"/>
+    <rect x="1078" y="515" width="32" height="44" fill="#C9A84C" opacity="0.4"/>
+    <rect x="1128" y="515" width="32" height="44" fill="#E8C84A" opacity="0.7"/>
+    <rect x="1178" y="515" width="32" height="44" fill="#C9A84C" opacity="0.4"/>
+    <rect x="1228" y="515" width="32" height="44" fill="#E8C84A" opacity="0.7"/>
+    <!-- window glow bleed -->
+    <rect x="1028" y="515" width="32" height="44" fill="#FFD860" opacity="0.3" filter="url(#blur2)"/>
+    <rect x="1128" y="515" width="32" height="44" fill="#FFD860" opacity="0.3" filter="url(#blur2)"/>
+    <rect x="1228" y="515" width="32" height="44" fill="#FFD860" opacity="0.3" filter="url(#blur2)"/>
+    <!-- lit windows row 2 -->
+    <rect x="1028" y="588" width="32" height="40" fill="#C9A84C" opacity="0.45"/>
+    <rect x="1128" y="588" width="32" height="40" fill="#E8C84A" opacity="0.65"/>
+    <rect x="1228" y="588" width="32" height="40" fill="#C9A84C" opacity="0.45"/>
+    <!-- arched door -->
+    <rect x="1130" y="648" width="60" height="72" rx="30" fill="#0A1820"/>
+    <rect x="1130" y="648" width="60" height="72" rx="30" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.6"/>
+    <!-- ground line -->
+    <rect x="955" y="720" width="405" height="3" fill="#C9A84C" opacity="0.6"/>
+  </g>
+  <!-- warm gold glow behind mansion -->
+  <ellipse cx="1150" cy="580" rx="220" ry="150" fill="#C9A84C" opacity="0.08" filter="url(#blur12)"/>
+
+  <!-- ============================================================ -->
+  <!-- VALLEY OF ASHES — left side -->
+  <!-- ============================================================ -->
+  <!-- grey ash clouds -->
+  <ellipse cx="260" cy="620" rx="300" ry="130" fill="#3A3A35" opacity="0.6"/>
+  <ellipse cx="160" cy="680" rx="200" ry="90" fill="#2E2E2A" opacity="0.65"/>
+  <ellipse cx="420" cy="660" rx="180" ry="70" fill="#353530" opacity="0.5"/>
+  <!-- ash mounds / ground -->
+  <ellipse cx="100" cy="730" rx="130" ry="45" fill="#252520" opacity="0.85"/>
+  <ellipse cx="300" cy="738" rx="170" ry="40" fill="#282823" opacity="0.8"/>
+  <ellipse cx="480" cy="726" rx="150" ry="35" fill="#252520" opacity="0.75"/>
+  <!-- industrial smokestacks -->
+  <rect x="55" y="530" width="26" height="200" fill="#1A1A16" opacity="0.95"/>
+  <rect x="118" y="558" width="22" height="172" fill="#1C1C18" opacity="0.9"/>
+  <rect x="194" y="540" width="24" height="190" fill="#1A1A16" opacity="0.92"/>
+  <rect x="338" y="548" width="20" height="180" fill="#1C1C18" opacity="0.8"/>
+  <!-- stack caps -->
+  <rect x="51" y="528" width="34" height="8" fill="#252520" opacity="0.95"/>
+  <rect x="114" y="554" width="30" height="8" fill="#252520" opacity="0.9"/>
+  <rect x="190" y="537" width="32" height="8" fill="#252520" opacity="0.92"/>
+  <rect x="334" y="545" width="28" height="8" fill="#252520" opacity="0.8"/>
+  <!-- smoke puffs -->
+  <circle cx="71" cy="520" r="28" fill="#4A4A44" opacity="0.7" filter="url(#blur6)" style="animation:ashDrift 6s ease-in-out infinite"/>
+  <circle cx="52" cy="500" r="20" fill="#3E3E38" opacity="0.55" filter="url(#blur6)" style="animation:ashDrift 8s ease-in-out 1s infinite"/>
+  <circle cx="129" cy="548" r="24" fill="#444440" opacity="0.65" filter="url(#blur6)" style="animation:ashDrift 7s ease-in-out 0.5s infinite"/>
+  <circle cx="206" cy="530" r="26" fill="#4A4A44" opacity="0.7" filter="url(#blur6)" style="animation:ashDrift 9s ease-in-out 2s infinite"/>
+  <circle cx="190" cy="510" r="18" fill="#3E3E38" opacity="0.5" filter="url(#blur6)" style="animation:ashDrift 6.5s ease-in-out 1.5s infinite"/>
+  <circle cx="348" cy="538" r="22" fill="#404040" opacity="0.6" filter="url(#blur6)" style="animation:ashDrift 7.5s ease-in-out 0.8s infinite"/>
+  <!-- label -->
+  <text x="220" y="800" font-family="Georgia, serif" font-size="11" fill="#AAA890" opacity="0.7" letter-spacing="3" text-anchor="middle" font-style="italic">Valley of Ashes</text>
+
+  <!-- ============================================================ -->
+  <!-- DR. T.J. ECKLEBURG BILLBOARD — center -->
+  <!-- ============================================================ -->
+  <!-- billboard posts -->
+  <rect x="514" y="545" width="12" height="185" fill="#2A2010" opacity="0.95"/>
+  <rect x="574" y="545" width="12" height="185" fill="#2A2010" opacity="0.95"/>
+  <!-- billboard board — warm aged yellow-white -->
+  <rect x="476" y="330" width="148" height="220" rx="3" fill="#E8D8A0" opacity="0.92"/>
+  <!-- faded age staining -->
+  <rect x="476" y="330" width="148" height="220" rx="3" fill="#8B6914" opacity="0.25"/>
+  <!-- board border -->
+  <rect x="476" y="330" width="148" height="220" rx="3" fill="none" stroke="#8B6010" stroke-width="3" opacity="0.8"/>
+  <rect x="482" y="336" width="136" height="208" rx="2" fill="none" stroke="#8B6010" stroke-width="1" opacity="0.4"/>
+
+  <!-- T.J. ECKLEBURG text at top of board -->
+  <text x="550" y="356" font-family="Georgia, serif" font-size="13" fill="#3A2800" opacity="0.9" letter-spacing="2" text-anchor="middle" font-weight="bold">T. J. ECKLEBURG</text>
+  <text x="550" y="372" font-family="Georgia, serif" font-size="8" fill="#5A3800" opacity="0.75" letter-spacing="3" text-anchor="middle">OCULIST · NEW YORK</text>
+
+  <!-- SPECTACLES — large and visible -->
+  <g opacity="0.95">
+    <!-- spectacle frames -->
+    <circle cx="522" cy="445" r="34" fill="none" stroke="#3A2800" stroke-width="4"/>
+    <circle cx="578" cy="445" r="34" fill="none" stroke="#3A2800" stroke-width="4"/>
+    <!-- nose bridge -->
+    <line x1="556" y1="445" x2="544" y2="445" stroke="#3A2800" stroke-width="4"/>
+    <!-- temple arms -->
+    <line x1="488" y1="445" x2="478" y2="440" stroke="#3A2800" stroke-width="3.5"/>
+    <line x1="612" y1="445" x2="622" y2="440" stroke="#3A2800" stroke-width="3.5"/>
+    <!-- lens fill — pale blue-grey like faded paint -->
+    <circle cx="522" cy="445" r="33" fill="#C8D4B8" opacity="0.55"/>
+    <circle cx="578" cy="445" r="33" fill="#C8D4B8" opacity="0.55"/>
+    <!-- irises — faded golden-brown -->
+    <circle cx="522" cy="445" r="20" fill="#8B7A30" opacity="0.85"/>
+    <circle cx="578" cy="445" r="20" fill="#8B7A30" opacity="0.85"/>
+    <!-- iris ring detail -->
+    <circle cx="522" cy="445" r="20" fill="none" stroke="#C4A840" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="578" cy="445" r="20" fill="none" stroke="#C4A840" stroke-width="1.5" opacity="0.6"/>
+    <!-- pupils -->
+    <circle cx="522" cy="445" r="10" fill="#1A1200"/>
+    <circle cx="578" cy="445" r="10" fill="#1A1200"/>
+    <!-- iris spokes -->
+    <line x1="522" y1="427" x2="522" y2="463" stroke="#C4A840" stroke-width="1" opacity="0.5"/>
+    <line x1="504" y1="445" x2="540" y2="445" stroke="#C4A840" stroke-width="1" opacity="0.5"/>
+    <line x1="509" y1="432" x2="535" y2="458" stroke="#C4A840" stroke-width="0.8" opacity="0.4"/>
+    <line x1="535" y1="432" x2="509" y2="458" stroke="#C4A840" stroke-width="0.8" opacity="0.4"/>
+    <line x1="578" y1="427" x2="578" y2="463" stroke="#C4A840" stroke-width="1" opacity="0.5"/>
+    <line x1="560" y1="445" x2="596" y2="445" stroke="#C4A840" stroke-width="1" opacity="0.5"/>
+    <line x1="565" y1="432" x2="591" y2="458" stroke="#C4A840" stroke-width="0.8" opacity="0.4"/>
+    <line x1="591" y1="432" x2="565" y2="458" stroke="#C4A840" stroke-width="0.8" opacity="0.4"/>
+    <!-- specular highlights -->
+    <circle cx="514" cy="437" r="4" fill="white" opacity="0.4"/>
+    <circle cx="570" cy="437" r="4" fill="white" opacity="0.4"/>
+  </g>
+  <!-- bottom caption -->
+  <text x="550" y="535" font-family="Georgia, serif" font-size="9" fill="#3A2800" opacity="0.65" letter-spacing="1" text-anchor="middle" font-style="italic">Eyes of God watch over all</text>
+
+  <!-- ============================================================ -->
+  <!-- ART DECO CORNER ORNAMENTS -->
+  <!-- ============================================================ -->
+  <g opacity="0.55" stroke="#C9A84C" stroke-width="1.2" fill="none">
+    <!-- top-left -->
+    <line x1="0" y1="44" x2="130" y2="44"/><line x1="44" y1="0" x2="44" y2="130"/>
+    <rect x="22" y="22" width="66" height="66"/><rect x="30" y="30" width="50" height="50"/>
+    <circle cx="55" cy="55" r="14"/><polygon points="55,41 69,55 55,69 41,55"/>
+    <!-- top-right -->
+    <line x1="1440" y1="44" x2="1310" y2="44"/><line x1="1396" y1="0" x2="1396" y2="130"/>
+    <rect x="1352" y="22" width="66" height="66"/><rect x="1360" y="30" width="50" height="50"/>
+    <circle cx="1385" cy="55" r="14"/><polygon points="1385,41 1399,55 1385,69 1371,55"/>
+    <!-- bottom-left -->
+    <line x1="0" y1="856" x2="130" y2="856"/><line x1="44" y1="900" x2="44" y2="770"/>
+    <rect x="22" y="812" width="66" height="66"/><rect x="30" y="820" width="50" height="50"/>
+    <circle cx="55" cy="845" r="14"/><polygon points="55,831 69,845 55,859 41,845"/>
+    <!-- bottom-right -->
+    <line x1="1440" y1="856" x2="1310" y2="856"/><line x1="1396" y1="900" x2="1396" y2="770"/>
+    <rect x="1352" y="812" width="66" height="66"/><rect x="1360" y="820" width="50" height="50"/>
+    <circle cx="1385" cy="845" r="14"/><polygon points="1385,831 1399,845 1385,859 1371,845"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- GOLD DECO HORIZONTAL BANDS -->
+  <!-- ============================================================ -->
+  <line x1="0" y1="720" x2="1440" y2="720" stroke="#C9A84C" stroke-width="1.5" opacity="0.5"/>
+  <line x1="0" y1="725" x2="1440" y2="725" stroke="#C9A84C" stroke-width="0.5" opacity="0.25"/>
+
+  <!-- ============================================================ -->
+  <!-- SCATTERED DECO DIAMONDS -->
+  <!-- ============================================================ -->
+  <g fill="#C9A84C" opacity="0.35">
+    <rect x="790" y="148" width="10" height="10" transform="rotate(45 795 153)"/>
+    <rect x="860" y="248" width="8" height="8" transform="rotate(45 864 252)"/>
+    <rect x="700" y="298" width="7" height="7" transform="rotate(45 703 301)"/>
+    <rect x="900" y="178" width="9" height="9" transform="rotate(45 904 182)"/>
+    <rect x="150" y="198" width="8" height="8" transform="rotate(45 154 202)"/>
+    <rect x="1200" y="298" width="9" height="9" transform="rotate(45 1204 302)"/>
+    <rect x="1350" y="198" width="7" height="7" transform="rotate(45 1353 201)"/>
+    <rect x="400" y="278" width="8" height="8" transform="rotate(45 404 282)"/>
+    <rect x="750" y="200" width="6" height="6" transform="rotate(45 753 203)"/>
+    <rect x="1050" y="160" width="7" height="7" transform="rotate(45 1053 163)"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- NICK'S BUNGALOW — far left -->
+  <!-- ============================================================ -->
+  <g opacity="0.65">
+    <rect x="28" y="655" width="90" height="65" fill="#1E3348"/>
+    <polygon points="18,655 73,622 138,655" fill="#152838"/>
+    <line x1="18" y1="655" x2="138" y2="655" stroke="#C9A84C" stroke-width="1.5" opacity="0.6"/>
+    <rect x="46" y="668" width="20" height="26" fill="#E8C84A" opacity="0.6"/>
+    <rect x="82" y="668" width="20" height="26" fill="#C9A84C" opacity="0.35"/>
+    <rect x="65" y="688" width="18" height="32" fill="#0A1520"/>
+  </g>
+
+  <!-- green light water reflection streak -->
+  <rect x="1307" y="723" width="7" height="120" fill="#00FF88" opacity="0.1" filter="url(#blur6)"/>
+  <ellipse cx="1310" cy="830" rx="16" ry="6" fill="#00FF88" opacity="0.15" filter="url(#blur6)"/>
+
+</svg>
+</div>
+<div id="home" class="screen active">
+  <div class="hero">
+    <div class="hero-eyebrow">F. Scott Fitzgerald</div>
+    <div class="hero-title">The <em>Great</em><br>Gatsby</div>
+    <div class="deco-line"><div class="deco-diamond"></div></div>
+    <div class="hero-sub">Study Quiz — Chapters I through V</div>
+  </div>
+
+  <div class="config-panel">
+
+    <!-- Chapters -->
+    <div class="section-label">Select Chapters</div>
+    <div class="select-all-row">
+      <button class="mini-btn" onclick="selectAllChapters()">All</button>
+      <button class="mini-btn" onclick="clearChapters()">None</button>
+    </div>
+    <div class="chapter-grid">
+      <button class="chapter-btn" data-ch="1" onclick="toggleChapter(this)"><span>I<span class="chapter-sub">Nick Arrives</span></span></button>
+      <button class="chapter-btn" data-ch="2" onclick="toggleChapter(this)"><span>II<span class="chapter-sub">Valley of Ashes</span></span></button>
+      <button class="chapter-btn" data-ch="3" onclick="toggleChapter(this)"><span>III<span class="chapter-sub">Gatsby's Party</span></span></button>
+      <button class="chapter-btn" data-ch="4" onclick="toggleChapter(this)"><span>IV<span class="chapter-sub">Gatsby's Past</span></span></button>
+      <button class="chapter-btn" data-ch="5" onclick="toggleChapter(this)"><span>V<span class="chapter-sub">Reunion</span></span></button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Slider -->
+    <div class="slider-container">
+      <div class="section-label">Number of Questions</div>
+      <div class="slider-header">
+        <div class="slider-value" id="sliderDisplay">10 <span>questions</span></div>
+      </div>
+      <div class="slider-wrapper">
+        <div class="slider-track-bg"></div>
+        <div class="slider-track-fill" id="sliderFill"></div>
+        <div class="slider-thumb" id="sliderThumb"></div>
+        <input type="range" id="qSlider" min="5" max="30" value="10" oninput="updateSlider(this)">
+      </div>
+      <div class="pool-notice" id="poolNotice">
+        <span class="pool-notice-icon">⚠</span>
+        <span class="pool-notice-text" id="poolNoticeText"></span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Types -->
+    <div class="section-label">Question Types</div>
+    <div class="select-all-row">
+      <button class="mini-btn" onclick="selectAllTypes()">All</button>
+      <button class="mini-btn" onclick="clearTypes()">None</button>
+    </div>
+    <div class="type-grid">
+      <button class="type-btn" data-type="mc" onclick="toggleType(this)"><span class="type-icon">🔤</span>Multiple Choice</button>
+      <button class="type-btn" data-type="tf" onclick="toggleType(this)"><span class="type-icon">⚖️</span>True / False</button>
+      <button class="type-btn" data-type="sa" onclick="toggleType(this)"><span class="type-icon">✍️</span>Short Answer</button>
+      <button class="type-btn" data-type="id" onclick="toggleType(this)"><span class="type-icon">🔍</span>Identification</button>
+    </div>
+
+    <div class="error-msg" id="errorMsg">Please select at least one chapter and one question type.</div>
+
+    <button class="start-btn" onclick="startQuiz()">Begin the Quiz</button>
+
+    <div class="claude-disclaimer">Made with <a href="https://claude.ai" target="_blank">Claude</a> by Anthropic</div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div id="quiz" class="screen">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="progress-area">
+      <div class="progress-fraction"><strong id="qNum">1</strong> / <span id="qTotal">10</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:10%"></div></div>
+    </div>
+  </div>
+
+  <div class="question-card" id="questionCard">
+    <div class="q-meta">
+      <span class="q-chapter-tag" id="qChapterTag">Chapter I</span>
+      <span class="q-type-tag" id="qTypeTag">Multiple Choice</span>
+    </div>
+    <div class="question-text" id="questionText"></div>
+    <div id="answersArea"></div>
+    <div class="answer-reveal" id="answerReveal">
+      <div class="reveal-label">Correct Answer</div>
+      <div class="reveal-text" id="revealText"></div>
+    </div>
+    <div class="override-row" id="overrideRow" style="display:none">
+      <span class="override-label">Override Result:</span>
+      <button class="override-correct-btn" id="overrideCorrect" onclick="overrideResult('correct')">✓ Mark Correct</button>
+      <button class="override-incorrect-btn" id="overrideIncorrect" onclick="overrideResult('incorrect')">✗ Mark Incorrect</button>
+    </div>
+  </div>
+
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+
+  <div class="score-strip">
+    <div class="score-label">Score</div>
+    <div>
+      <span class="score-numbers" id="scoreDisplay">0 / 0</span>
+      <span class="score-pct" id="scorePct">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESULTS ===== -->
+<div id="results" class="screen">
+  <div class="results-title" id="resultsGrade"></div>
+  <div class="results-subtitle">Quiz Complete</div>
+  <div class="deco-line"><div class="deco-diamond"></div></div>
+  <div class="score-circle">
+    <div class="score-pct-big" id="resultsPct"></div>
+    <div class="score-frac" id="resultsFrac"></div>
+  </div>
+  <div class="result-quote" id="resultQuote"></div>
+  <div class="results-actions">
+    <button class="results-btn primary" onclick="startQuiz()">Retake Quiz</button>
+    <button class="results-btn secondary" onclick="goHome()">New Settings</button>
+  </div>
+</div>
+
+<script>
+// ===== QUESTION BANK =====
+const ALL_QUESTIONS = [
+
+  // ===================== CHAPTER 1 =====================
+  // MC (16)
+  {ch:1,type:'mc',q:"Who narrates The Great Gatsby?",opts:["Jay Gatsby","Tom Buchanan","Nick Carraway","Jordan Baker"],ans:2},
+  {ch:1,type:'mc',q:"Where is Nick Carraway originally from before moving to New York?",opts:["New York City","Chicago","The Midwest","Boston"],ans:2},
+  {ch:1,type:'mc',q:"What color is the light at the end of Daisy's dock that Gatsby reaches toward?",opts:["Red","White","Green","Blue"],ans:2},
+  {ch:1,type:'mc',q:"Which college did Nick attend?",opts:["Harvard","Princeton","Yale","Oxford"],ans:2},
+  {ch:1,type:'mc',q:"Where do Tom and Daisy Buchanan live?",opts:["West Egg","Manhattan","East Egg","New Haven"],ans:2},
+  {ch:1,type:'mc',q:"What is Nick's profession in New York?",opts:["Lawyer","Doctor","Bond salesman","Banker"],ans:2},
+  {ch:1,type:'mc',q:"What does Gatsby do at the end of Chapter 1 when Nick spots him outside?",opts:["Waves to Nick","Drives away in his car","Reaches trembling toward a green light across the water","Stands on his dock fishing"],ans:2},
+  {ch:1,type:'mc',q:"What is the relationship between Nick Carraway and Daisy Buchanan?",opts:["Siblings","Second cousins once removed","Childhood sweethearts","Neighbors"],ans:1},
+  {ch:1,type:'mc',q:"What sport was Tom Buchanan famous for in college?",opts:["Baseball","Tennis","Football","Polo"],ans:2},
+  {ch:1,type:'mc',q:"Where does Nick rent his home?",opts:["East Egg","Manhattan","West Egg","The Valley of Ashes"],ans:2},
+  {ch:1,type:'mc',q:"What does Daisy say she hopes her daughter will be?",opts:["Brilliant and ambitious","A great athlete","A beautiful little fool","A kind and honest woman"],ans:2},
+  {ch:1,type:'mc',q:"How does Nick describe his house compared to Gatsby's mansion?",opts:["Just as grand","A comfortable middle-class home","An eyesore, a small eyesore — rented for eighty dollars a month","A charming Victorian cottage"],ans:2},
+  {ch:1,type:'mc',q:"What interrupts dinner at the Buchanan household on Nick's first visit?",opts:["A thunderstorm","A phone call (Tom's mistress calling)","A guest arriving unexpectedly","A car accident outside"],ans:1},
+  {ch:1,type:'mc',q:"How does Tom Buchanan carry himself physically in the novel?",opts:["Thin, nervous, and pale","Powerful, arrogant, and athletically built","Tall, gaunt, and reserved","Short and stocky with a gentle manner"],ans:1},
+  {ch:1,type:'mc',q:"What year does Nick say he moved to West Egg?",opts:["1920","1921","1922","1923"],ans:2},
+  {ch:1,type:'mc',q:"What does Nick say he is one of the few of, at the end of Chapter 1?",opts:["The wealthy in West Egg","The truly educated men of his generation","The honest people he has ever known","The veterans who still believed in the American dream"],ans:2},
+  // TF (14)
+  {ch:1,type:'tf',q:"Nick Carraway and Jay Gatsby are next-door neighbors.",ans:true},
+  {ch:1,type:'tf',q:"Tom Buchanan is a former Yale football player.",ans:true},
+  {ch:1,type:'tf',q:"Nick rents his house on the more fashionable East Egg.",ans:false,correctText:"Nick lives on West Egg. East Egg is where old-money families like the Buchanans live."},
+  {ch:1,type:'tf',q:"Daisy and Jordan Baker are old friends.",ans:true},
+  {ch:1,type:'tf',q:"Tom Buchanan is described as a gentle, humble man.",ans:false,correctText:"Tom is described as physically powerful and arrogant, with a 'cruel body' and a domineering manner."},
+  {ch:1,type:'tf',q:"Nick had previously met Gatsby before moving to West Egg.",ans:false,correctText:"Nick does not know Gatsby personally — he only spots him across the water at the end of Chapter 1."},
+  {ch:1,type:'tf',q:"Nick considers himself one of the few honest people he has ever known.",ans:true},
+  {ch:1,type:'tf',q:"The Buchanans' home is described as a Georgian Colonial mansion.",ans:true},
+  {ch:1,type:'tf',q:"Jordan Baker is a professional tennis player.",ans:false,correctText:"Jordan Baker is a professional golfer, not a tennis player."},
+  {ch:1,type:'tf',q:"Gatsby's mansion is located directly next to Nick's rented house.",ans:true},
+  {ch:1,type:'tf',q:"Nick served in World War I before moving to New York.",ans:true},
+  {ch:1,type:'tf',q:"East Egg and West Egg represent the same social class.",ans:false,correctText:"East Egg represents old money and inherited wealth, while West Egg represents new money — recently acquired wealth without social pedigree."},
+  {ch:1,type:'tf',q:"Daisy's voice is described as being full of money.",ans:false,correctText:"Gatsby says Daisy's voice is 'full of money' — but this famous line comes in a later chapter, not Chapter 1."},
+  {ch:1,type:'tf',q:"Tom openly acknowledges that he is having an affair during Nick's dinner visit.",ans:false,correctText:"Tom doesn't openly admit it, but his behavior with the phone call makes it obvious. Daisy and Jordan know about it but Tom never explicitly confesses at the table."},
+  // SA (12)
+  {ch:1,type:'sa',q:"What sport does Jordan Baker play professionally?",ans:"Golf"},
+  {ch:1,type:'sa',q:"What is Daisy doing when Nick arrives at the Buchanan home for dinner?",ans:"She and Jordan are lounging on a couch in white dresses, as if they have just floated in from the breeze."},
+  {ch:1,type:'sa',q:"What unsettling interruption happens during Nick's dinner at the Buchanans?",ans:"Tom receives a phone call from his mistress, Myrtle Wilson, which embarrasses Daisy and makes the dinner uncomfortable."},
+  {ch:1,type:'sa',q:"How does Nick describe the atmosphere and mood of East Egg on his first visit?",ans:"He finds it glamorous and beautiful but also senses an underlying carelessness and shallowness beneath the surface wealth."},
+  {ch:1,type:'sa',q:"What does Nick say his family ironically claims as their noble lineage?",ans:"They claim descent from the Dukes of Buccleuch, but actually started as a hardware merchant family."},
+  {ch:1,type:'sa',q:"What does Gatsby appear to be doing when Nick first spots him alone outside at night?",ans:"He is standing alone on his lawn in the dark, reaching or trembling toward a single green light across the water at the end of Daisy's dock."},
+  {ch:1,type:'sa',q:"What year did Nick move to West Egg, and what does he describe this period as?",ans:"He moved in 1922, and he describes it as the summer that changed his life — the events he is about to narrate."},
+  {ch:1,type:'sa',q:"How does Tom behave toward Nick on their first meeting?",ans:"Tom is aggressive and imposing — he grabs Nick's hand hard and leans on him physically, projecting dominance and superiority."},
+  {ch:1,type:'sa',q:"How does Nick feel about Jordan Baker when he first meets her?",ans:"He finds her attractive but also somewhat arrogant and bored — she holds her chin slightly high and speaks with an air of cool disdain."},
+  {ch:1,type:'sa',q:"What does the green light at the end of Daisy's dock represent to Gatsby in Chapter 1?",ans:"It symbolizes his longing and dreams — specifically his hope to reunite with Daisy, and the unattainable ideal he has built his life around."},
+  {ch:1,type:'sa',q:"Where does Nick work when he arrives in New York?",ans:"He works in the bond business (bond sales) in lower Manhattan."},
+  {ch:1,type:'sa',q:"How does Nick describe Gatsby's parties from a distance at the end of Chapter 1?",ans:"He notices the lights and music from Gatsby's mansion late at night across the lawn, establishing Gatsby as a mysterious and extravagant neighbor."},
+  // ID (10)
+  {ch:1,type:'id',q:"Who is described as having 'a body capable of enormous leverage — a cruel body'?",ans:"Tom Buchanan. The description establishes him as physically imposing, aggressive, and menacing — his body reflects his personality."},
+  {ch:1,type:'id',q:"Identify what the green light at the end of Daisy's dock symbolizes for Gatsby in Chapter 1.",ans:"It symbolizes Gatsby's longing and dreams — specifically his hope to reunite with Daisy. It represents the unattainable ideal he has built his entire life around, and more broadly, the American Dream itself."},
+  {ch:1,type:'id',q:"Who is Jordan Baker and what is her connection to Daisy?",ans:"Jordan Baker is a professional golfer and Daisy's close friend. She is present at the Buchanans' home when Nick visits, and Nick becomes romantically interested in her."},
+  {ch:1,type:'id',q:"What does Nick's description of East Egg vs. West Egg tell us about class in the novel?",ans:"East Egg represents old money — inherited wealth and social status. West Egg represents new money — recently acquired wealth without social pedigree. The distinction shows that in Gatsby's world, how you got your money matters as much as having it."},
+  {ch:1,type:'id',q:"What does Daisy say about her daughter, and what does it reveal about her worldview?",ans:"Daisy says she hopes her daughter will be a 'beautiful little fool,' suggesting she believes ignorance is the only protection for women in a world that offers them so little real power or autonomy."},
+  {ch:1,type:'id',q:"How does Nick function as a narrator in Chapter 1, and why is his position significant?",ans:"Nick is both an observer and a participant — he is close enough to Gatsby, Daisy, and Tom to witness events intimately, yet removed enough (as a Midwesterner of modest means) to comment on them critically. His dual position makes him a complex and sometimes unreliable narrator."},
+  {ch:1,type:'id',q:"What does the Buchanan household represent in Chapter 1?",ans:"It represents the glamour and moral emptiness of old money. Despite its beauty and luxury, the household is defined by Tom's infidelity, Daisy's passive resignation, and a general atmosphere of careless entitlement."},
+  {ch:1,type:'id',q:"How does Fitzgerald use geography in Chapter 1 to establish social themes?",ans:"The physical separation of East Egg (old money), West Egg (new money), the Valley of Ashes (the poor), and New York (where moral boundaries dissolve) maps the novel's class hierarchy onto the landscape. Where characters live reflects who they are."},
+  {ch:1,type:'id',q:"What is the significance of Nick saying he is 'one of the few honest people' he has ever known?",ans:"It establishes Nick as a self-proclaimed moral authority — but also hints at his potential unreliability, since characters who claim honesty this explicitly often have blind spots. It also sets up the theme of moral corruption that runs through the novel."},
+  {ch:1,type:'id',q:"Describe the tone Nick uses when narrating Chapter 1, and what it suggests about his perspective.",ans:"Nick's tone is romantic and slightly nostalgic but also ironic and observant. He is drawn to the beauty and excess of the world he is describing, yet aware of its hollowness — a tension that runs throughout the novel."},
+
+  // ===================== CHAPTER 2 =====================
+  // MC (16)
+  {ch:2,type:'mc',q:"What is the 'Valley of Ashes'?",opts:["A cemetery near New York","An industrial dumping ground between West Egg and New York","A nightclub in Manhattan","Tom's private estate"],ans:1},
+  {ch:2,type:'mc',q:"Whose eyes stare out from a faded billboard over the Valley of Ashes?",opts:["God's","Doctor T.J. Eckleburg's","Jay Gatsby's","George Wilson's"],ans:1},
+  {ch:2,type:'mc',q:"What is the name of Tom's mistress?",opts:["Jordan Baker","Catherine Wilson","Myrtle Wilson","Ella Kaye"],ans:2},
+  {ch:2,type:'mc',q:"Where does Tom take Nick in Chapter 2?",opts:["Gatsby's mansion","A speakeasy in Brooklyn","Myrtle's apartment in New York City","The Buchanans' home"],ans:2},
+  {ch:2,type:'mc',q:"What does Tom buy Myrtle when they stop in the Valley of Ashes?",opts:["A necklace","A puppy","A magazine","A bottle of perfume"],ans:1},
+  {ch:2,type:'mc',q:"How does Chapter 2 end for Myrtle?",opts:["She and Tom get engaged","Tom breaks her nose","She leaves Tom for George","She moves to Manhattan permanently"],ans:1},
+  {ch:2,type:'mc',q:"Who is Catherine in Chapter 2?",opts:["Myrtle's sister","Tom's cousin","Jordan Baker's friend","Daisy's maid"],ans:0},
+  {ch:2,type:'mc',q:"What does George Wilson do for a living?",opts:["He is a banker","He is a police officer","He runs an auto repair garage","He works at a factory"],ans:2},
+  {ch:2,type:'mc',q:"What does Myrtle do when they arrive at her apartment to mark her new persona?",opts:["She puts on a black wig","She changes into an elaborate cream-colored dress","She orders everyone to bow to her","She fires her housekeeper"],ans:1},
+  {ch:2,type:'mc',q:"What does Tom say when Myrtle insists she has the right to say Daisy's name?",opts:["He ignores her","He laughs it off","He breaks her nose with his open hand","He threatens to leave her"],ans:2},
+  {ch:2,type:'mc',q:"Who are the McKees and what does Mr. McKee do?",opts:["Tom's business partners; lawyers","A couple from downstairs; Mr. McKee is a photographer","Myrtle's relatives; he is a doorman","Party guests; he is a jazz musician"],ans:1},
+  {ch:2,type:'mc',q:"How does Nick get to the Valley of Ashes with Tom in Chapter 2?",opts:["They drive in Tom's car","They take a ferry","They get off the train together","They take a taxi from East Egg"],ans:2},
+  {ch:2,type:'mc',q:"Where is the billboard of Doctor T.J. Eckleburg located?",opts:["In Manhattan near Central Park","On the road between West Egg and New York, overlooking the Valley of Ashes","In the Valley of Ashes itself","On the highway to East Egg"],ans:1},
+  {ch:2,type:'mc',q:"What does Catherine tell Nick about Tom and Myrtle's situation?",opts:["That they plan to elope soon","That Tom actually hates Myrtle","That neither Tom nor Myrtle can stand their current partners","That Myrtle knows about Daisy"],ans:2},
+  {ch:2,type:'mc',q:"What does Myrtle buy at the newsstand before the apartment party?",opts:["A gossip tabloid and a dog leash","Town Tattle magazine and cold cream","A movie magazine and cigarettes","A society newspaper and perfume"],ans:1},
+  {ch:2,type:'mc',q:"How does Nick describe his state of mind at the end of the apartment party scene?",opts:["Sober and disapproving","Angry at Tom","Drunk — he says it was one of only two times he got drunk","Happy and carefree"],ans:2},
+  // TF (14)
+  {ch:2,type:'tf',q:"George Wilson owns the garage in the Valley of Ashes.",ans:true},
+  {ch:2,type:'tf',q:"Myrtle Wilson believes Tom will leave Daisy and marry her.",ans:true},
+  {ch:2,type:'tf',q:"The billboard of Doctor T.J. Eckleburg advertises a dental practice.",ans:false,correctText:"The billboard advertises an oculist (eye doctor). The business is long gone — only the faded sign remains."},
+  {ch:2,type:'tf',q:"Nick is sober and composed throughout the party at Myrtle's apartment.",ans:false,correctText:"Nick gets drunk at the apartment party — one of only two times he admits to being drunk in the novel."},
+  {ch:2,type:'tf',q:"Tom hits Myrtle because she refuses to stop saying Daisy's name.",ans:true},
+  {ch:2,type:'tf',q:"The Valley of Ashes is located between West Egg and Manhattan.",ans:true},
+  {ch:2,type:'tf',q:"Catherine tells Nick that neither Tom nor Myrtle can stand their current partners.",ans:true},
+  {ch:2,type:'tf',q:"Myrtle Wilson is a plain, colorless woman with no physical presence.",ans:false,correctText:"Myrtle is described as having a raw, sensuous vitality — she is fleshy and physically alive, not colorless."},
+  {ch:2,type:'tf',q:"Tom introduced himself to Myrtle on a train.",ans:true},
+  {ch:2,type:'tf',q:"The apartment Tom keeps for Myrtle is large and luxurious.",ans:false,correctText:"The apartment is small and cluttered, crammed with oversized furniture — it feels suffocating, not grand."},
+  {ch:2,type:'tf',q:"George Wilson knows about Myrtle's affair with Tom.",ans:false,correctText:"George does not know who Myrtle's lover is at this point. He suspects she is seeing someone but does not know it is Tom."},
+  {ch:2,type:'tf',q:"The eyes on the Eckleburg billboard are described as blue and enormous.",ans:true},
+  {ch:2,type:'tf',q:"Myrtle buys a copy of Simon Called Peter at the newsstand.",ans:true},
+  {ch:2,type:'tf',q:"Nick ends up spending the night at the apartment after the party.",ans:false,correctText:"Nick leaves late with Mr. McKee and ends up in Pennsylvania Station waiting for a train — the chapter ends ambiguously."},
+  // SA (12)
+  {ch:2,type:'sa',q:"What does Tom do to Myrtle at the end of Chapter 2?",ans:"He breaks her nose by striking her with his open hand after she repeatedly shouts Daisy's name."},
+  {ch:2,type:'sa',q:"What name does Myrtle shout that causes Tom to strike her?",ans:"Daisy's name."},
+  {ch:2,type:'sa',q:"Describe the apartment Tom keeps for Myrtle — where is it and what does it look like?",ans:"It is a small, cluttered apartment on the top floor of a building in Washington Heights (Manhattan), decorated with oversized furniture and tapestry scenes of Versailles. It feels cramped despite its pretensions."},
+  {ch:2,type:'sa',q:"What does the billboard of Doctor T.J. Eckleburg look like?",ans:"It depicts a pair of enormous faded blue eyes behind large yellow spectacles, painted on a decaying billboard overlooking the Valley of Ashes."},
+  {ch:2,type:'sa',q:"Who else is at the party in Myrtle's apartment besides Tom, Nick, and Myrtle?",ans:"Catherine (Myrtle's sister) and the McKees — a couple from downstairs. Mr. McKee is a photographer."},
+  {ch:2,type:'sa',q:"How does Nick end up at Myrtle's apartment in the first place?",ans:"Tom insists Nick come with him when they get off the train at the Valley of Ashes, essentially forcing Nick along."},
+  {ch:2,type:'sa',q:"How did Tom and Myrtle first meet, according to Myrtle?",ans:"They met on a train — Tom was in a dress suit and white shirt, and Myrtle says she couldn't keep her eyes off him. She felt she had to speak to him."},
+  {ch:2,type:'sa',q:"How does Myrtle treat her husband George when speaking about him at the party?",ans:"She speaks dismissively of him — saying she married him because she thought he was a gentleman and she made a mistake. She mocks him as beneath her."},
+  {ch:2,type:'sa',q:"What does the Valley of Ashes physically look like?",ans:"It is a desolate grey land where ashes grow like wheat into ridges and hills and grotesque gardens — industrial waste that forms a ghostly grey landscape covered in dust and smoke."},
+  {ch:2,type:'sa',q:"What does Nick observe about the class dynamics at Myrtle's apartment party?",ans:"Despite pretensions to sophistication, the gathering is squalid and chaotic. Everyone is drunk, the conversation is shallow, and it ends in violence — showing the hollowness of Myrtle's fantasy of a better life."},
+  {ch:2,type:'sa',q:"Why does Tom keep an apartment in New York instead of meeting Myrtle elsewhere?",ans:"It gives the affair an air of permanence and establishment — Tom sets Myrtle up like a kept mistress, which satisfies his ego and her desire to feel elevated in status."},
+  {ch:2,type:'sa',q:"How does George Wilson react when Tom and Nick stop at his garage?",ans:"George is enthusiastic about a potential car deal with Tom — he is eager and somewhat desperate, unaware that Tom is sleeping with his wife."},
+  // ID (10)
+  {ch:2,type:'id',q:"Describe the symbolic significance of the eyes of Doctor T.J. Eckleburg.",ans:"The faded billboard eyes overlook the moral wasteland of the Valley of Ashes. They are widely interpreted as a symbol of God — or a moral conscience — watching over a corrupt, spiritually empty society. George Wilson later explicitly connects them to the eyes of God."},
+  {ch:2,type:'id',q:"Who is George Wilson and what does his situation represent thematically?",ans:"George is Myrtle's husband and runs a run-down auto garage. He is passive and oblivious. He represents the working poor — ground down by a system that rewards only the wealthy — and is ultimately destroyed by the careless actions of the rich."},
+  {ch:2,type:'id',q:"What does the Valley of Ashes represent in the novel?",ans:"It represents the dark underside of the American Dream — the poverty, moral decay, and human cost hidden beneath the glittering wealth of the Eggs. While the wealthy throw parties, the Valley bears the industrial and human waste of their excess."},
+  {ch:2,type:'id',q:"How does Myrtle Wilson behave at her apartment party, and what does it reveal about her?",ans:"Myrtle puts on airs of superiority — she changes into an elaborate dress, orders people around, and speaks disparagingly of others. It reveals her desperate desire to escape her class and her belief that Tom is her ticket to a better life."},
+  {ch:2,type:'id',q:"What does Tom's relationship with Myrtle reveal about his character?",ans:"It shows Tom's hypocrisy and sense of entitlement — he openly conducts an affair while expecting loyalty from Daisy, and he is physically violent with Myrtle when she oversteps. He treats her as a possession rather than a person."},
+  {ch:2,type:'id',q:"How does Fitzgerald use color in Chapter 2 to establish mood?",ans:"The grey ash of the Valley contrasts sharply with the gaudy colors of the apartment party. Grey represents death and decay; the bright, cheap colors of Myrtle's world represent the vulgarity of aspirational excess. Color codes moral and social status throughout the chapter."},
+  {ch:2,type:'id',q:"What does Myrtle's behavior toward George reveal about the class tensions in the novel?",ans:"She is openly contemptuous of him for being poor, while idolizing Tom for being wealthy. This reveals how thoroughly the characters in the novel have internalized class as a measure of human worth."},
+  {ch:2,type:'id',q:"Why is it significant that Tom breaks Myrtle's nose specifically after she says Daisy's name?",ans:"It reveals Tom's controlling nature and his double standard — he uses Myrtle for pleasure but becomes violent when she threatens to blur the boundary between his two worlds. Daisy's name is sacred to his public identity, and Myrtle stepping into that space is intolerable to him."},
+  {ch:2,type:'id',q:"How does Nick's drunken state in Chapter 2 affect how we should read his narration?",ans:"Nick admits to being drunk — one of only two times he acknowledges this. It raises questions about the reliability of his account of the apartment party, and suggests that his usually detached observation is compromised here, making the violence at the end even more jarring."},
+  {ch:2,type:'id',q:"What is the thematic connection between the Valley of Ashes and Gatsby's world of wealth?",ans:"The Valley of Ashes is the direct consequence of the wealth on display in East and West Egg. The industrial waste represents the human cost of that prosperity — it is what is left behind when the wealthy pursue their pleasures without accountability."},
+
+  // ===================== CHAPTER 3 =====================
+  // MC (16)
+  {ch:3,type:'mc',q:"How do most guests arrive at Gatsby's parties?",opts:["By formal written invitation","They simply show up uninvited","By ferry from Manhattan","By private limousine service only"],ans:1},
+  {ch:3,type:'mc',q:"Where does Nick first properly meet Jay Gatsby?",opts:["At Daisy's house","At Gatsby's party","At a New York restaurant","On the commuter train"],ans:1},
+  {ch:3,type:'mc',q:"What phrase does Gatsby use to address Nick and others?",opts:["Old chap","Dear fellow","Old sport","My friend"],ans:2},
+  {ch:3,type:'mc',q:"What is Jordan Baker rumored to have done in her golf career?",opts:["Bribed officials","Cheated in a tournament","Injured a competitor","Forged her scorecard"],ans:1},
+  {ch:3,type:'mc',q:"What do two girls in yellow dresses tell Nick about Gatsby at the party?",opts:["That he is a German spy","That he killed a man","That he is actually very old","That he works for the government"],ans:1},
+  {ch:3,type:'mc',q:"What does Gatsby's library contain that surprises Owl Eyes?",opts:["No books at all","Fake painted book spines","Real, uncut books","Only books about Daisy"],ans:2},
+  {ch:3,type:'mc',q:"What happens to Owl Eyes' car at the end of Chapter 3?",opts:["It is stolen","It runs out of fuel","It crashes into a ditch outside the party","It is towed by police"],ans:2},
+  {ch:3,type:'mc',q:"Where does Gatsby claim he is originally from when he first introduces himself to Nick?",opts:["New York City","San Francisco","Louisville, Kentucky","Chicago, Illinois"],ans:1},
+  {ch:3,type:'mc',q:"How does Nick receive his invitation to Gatsby's party — unusually compared to other guests?",opts:["He crashes the party","He is hand-delivered a formal invitation by Gatsby's chauffeur","Daisy invites him on Gatsby's behalf","Jordan Baker sneaks him in"],ans:1},
+  {ch:3,type:'mc',q:"What does Nick notice about how Gatsby stands at his own parties?",opts:["He dances enthusiastically with guests","He stands apart, watching from the steps — not participating","He mingles with everyone and tells loud stories","He hides in his library all night"],ans:1},
+  {ch:3,type:'mc',q:"What is the atmosphere of Gatsby's parties like?",opts:["Quiet and sophisticated, with classical music","Wild, lavish, and chaotic — full of strangers, rumors, and excess","Elegant but small, invitation-only","Outdoors only, with simple refreshments"],ans:1},
+  {ch:3,type:'mc',q:"What does Nick say about Jordan Baker's dishonesty?",opts:["He finds it charming and harmless","He is repulsed and ends their acquaintance","He knows she is dishonest but remains attracted to her anyway","He confronts her about it at the party"],ans:2},
+  {ch:3,type:'mc',q:"What time does Nick typically return home from Gatsby's parties?",opts:["Midnight","2 a.m.","Long after midnight, very late","Before dark"],ans:2},
+  {ch:3,type:'mc',q:"What does Gatsby tell Nick he has been doing all evening when Nick finally meets him?",opts:["Waiting for a phone call from New York","Looking for Nick since he arrived","Hosting his butler and staff in the kitchen","Standing alone watching the sky"],ans:1},
+  {ch:3,type:'mc',q:"How is the car crash at the end of Chapter 3 connected to Owl Eyes?",opts:["Owl Eyes is driving the car","The wheel falls off a car near the party and Owl Eyes is among a crowd watching","Owl Eyes reports the crash to police","Owl Eyes causes the crash by stumbling onto the road"],ans:1},
+  {ch:3,type:'mc',q:"What does Nick do with Jordan Baker at the end of the chapter?",opts:["He drives her home to East Egg","He dances with her and then leaves alone","He stays behind talking with her and begins a romantic interest","He argues with her about Gatsby"],ans:2},
+  // TF (14)
+  {ch:3,type:'tf',q:"Gatsby himself drinks heavily at his own parties.",ans:false,correctText:"Gatsby does not drink at his parties. He stands apart, watching guests, and remains completely sober."},
+  {ch:3,type:'tf',q:"Nick receives a formal written invitation to Gatsby's party.",ans:true},
+  {ch:3,type:'tf',q:"Gatsby's parties are small, intimate gatherings for close friends.",ans:false,correctText:"Gatsby's parties are enormous, lavish affairs attended by hundreds of people, most of whom Gatsby doesn't know personally."},
+  {ch:3,type:'tf',q:"Nick and Jordan Baker share a romantic moment at the party.",ans:true},
+  {ch:3,type:'tf',q:"Gatsby tells Nick he attended Oxford University.",ans:true},
+  {ch:3,type:'tf',q:"Owl Eyes is impressed that Gatsby's books are real and not just decorations.",ans:true},
+  {ch:3,type:'tf',q:"Most guests at Gatsby's parties know a great deal of accurate information about him.",ans:false,correctText:"Most guests know almost nothing accurate about Gatsby and spread wild, contradictory rumors about his past."},
+  {ch:3,type:'tf',q:"Gatsby personally greets every single guest as they arrive at his parties.",ans:false,correctText:"Gatsby stands at the top of his steps and watches — he does not circulate and greet guests personally."},
+  {ch:3,type:'tf',q:"The driver who crashes the car outside Gatsby's party claims he had no idea there was a wall.",ans:true},
+  {ch:3,type:'tf',q:"Nick feels comfortable and at home immediately upon arriving at Gatsby's party.",ans:false,correctText:"Nick feels out of place initially — he doesn't know anyone and wanders around looking for Gatsby until they accidentally meet."},
+  {ch:3,type:'tf',q:"Jordan Baker once cheated in a golf tournament.",ans:true},
+  {ch:3,type:'tf',q:"Gatsby throws these parties hoping a specific person will one day attend.",ans:true},
+  {ch:3,type:'tf',q:"The two girls in yellow dresses who gossip about Gatsby are named characters.",ans:false,correctText:"The two girls in yellow are unnamed party guests. They simply gossip about Gatsby as part of the crowd."},
+  {ch:3,type:'tf',q:"Nick ends Chapter 3 by reflecting that he is conducting his life with good order and discipline.",ans:true},
+  // SA (12)
+  {ch:3,type:'sa',q:"What two rumors circulate among guests about Gatsby's past?",ans:"That he killed a man, and that he was a German spy during World War I (other rumors also circulate at the party)."},
+  {ch:3,type:'sa',q:"Describe the food and entertainment at one of Gatsby's parties.",ans:"The parties feature lavish buffets, orchestras, hundreds of guests, champagne, and elaborate decorations. Caterers transform the grounds into a festival of lights and music every weekend."},
+  {ch:3,type:'sa',q:"Why is Nick unusual among Gatsby's party guests?",ans:"Nick was actually invited — he received a formal invitation from Gatsby's chauffeur — whereas most guests simply showed up without being invited."},
+  {ch:3,type:'sa',q:"What is Owl Eyes doing when Nick and Jordan find him in Gatsby's library?",ans:"He is drunk and marveling at Gatsby's books, astonished that they are real though uncut — he had expected fake cardboard facades."},
+  {ch:3,type:'sa',q:"What does Nick say about Jordan Baker's dishonesty and how does he respond to it?",ans:"Nick knows Jordan is incurably dishonest and once cheated in a golf tournament, yet he remains attracted to her and continues pursuing the relationship."},
+  {ch:3,type:'sa',q:"What does Owl Eyes' discovery of the real books in Gatsby's library suggest?",ans:"It suggests that while Gatsby has made everything look real — the books are there — they are uncut, meaning unread. Gatsby has created a convincing illusion of education and culture without the substance behind it."},
+  {ch:3,type:'sa',q:"How does Gatsby's physical appearance strike Nick when he finally meets him at the party?",ans:"Nick is struck by Gatsby's rare smile — it focuses entirely on him with complete understanding and reassurance, as if Nick were exactly the person he had hoped to meet."},
+  {ch:3,type:'sa',q:"What time of year and what season is established in Chapter 3?",ans:"It is summer — specifically the hot, festive summer of 1922, which sets the tone of excess and abandon that defines the chapter."},
+  {ch:3,type:'sa',q:"How does Nick describe leaving Gatsby's party and heading back home?",ans:"He describes the exit as passing through a world still glittering with lights and noise — but once he crosses back to his own modest yard, the contrast emphasizes Gatsby's extravagance versus Nick's simplicity."},
+  {ch:3,type:'sa',q:"What story circulates about why Gatsby always wears a white flannel suit?",ans:"No specific story — but Gatsby is known for his elaborate, carefully chosen wardrobe as part of his constructed image. The white suit makes him stand out from his own guests."},
+  {ch:3,type:'sa',q:"How do guests behave at Gatsby's parties compared to how they speak about their host?",ans:"They enjoy all the food and drink freely while spreading wild rumors about Gatsby — whom most have never even spoken to. They take his hospitality while treating him as a fascinating mystery or joke."},
+  {ch:3,type:'sa',q:"What does Gatsby do for Nick after they briefly talk at the party?",ans:"Gatsby arranges for Nick to be introduced to Jordan Baker, and sends a message via a butler that he would like to speak with Jordan privately — setting up the later revelation about Daisy."},
+  // ID (10)
+  {ch:3,type:'id',q:"Describe Gatsby's smile as Nick first perceives it.",ans:"Nick describes Gatsby's smile as rare and extraordinary — it seemed to focus on you with complete understanding and reassurance, as if you were exactly the person he had always hoped to meet. It conveyed a belief in you that was irresistible. Nick calls it one of those rare smiles with a quality of eternal reassurance."},
+  {ch:3,type:'id',q:"Who is Owl Eyes and what is his function in the novel?",ans:"Owl Eyes is a minor drunken party guest who notices that Gatsby's books are real. He symbolizes the few people who look past Gatsby's facade and notice the reality beneath — however partially. He reappears at Gatsby's funeral as one of the only attendees."},
+  {ch:3,type:'id',q:"What does the chaos of Gatsby's parties suggest thematically?",ans:"The parties represent the recklessness and moral emptiness beneath the surface glamour of the 1920s. Despite the wealth, the parties are filled with strangers, false rumors, drunkenness, and accidents — suggesting that Gatsby's dream world is built on an unstable foundation."},
+  {ch:3,type:'id',q:"Why does Gatsby throw such enormous parties if he barely participates in them?",ans:"Gatsby throws the parties hoping Daisy will one day wander in. The parties are not for enjoyment — they are a mechanism to draw Daisy's attention across the bay and create an atmosphere of wealth and glamour that might reunite them."},
+  {ch:3,type:'id',q:"What does Jordan Baker's cheating at golf suggest about the world of the novel?",ans:"It suggests that the wealthy and privileged feel entitled to bend or break rules without consequence, reflecting a broader theme of moral carelessness among the upper class throughout the novel."},
+  {ch:3,type:'id',q:"What do the uncut books in Gatsby's library symbolize?",ans:"They symbolize the gap between Gatsby's constructed image and the reality beneath it. He has assembled all the props of an educated, cultured gentleman — but the uncut pages reveal he has never actually read them. The appearance of substance substitutes for real substance."},
+  {ch:3,type:'id',q:"How does the party scene in Chapter 3 contribute to the theme of illusion vs. reality?",ans:"Everything at the party is performance — rumors replace facts, appearances replace character, and even the host is a mystery. Guests enjoy the spectacle without ever understanding the man behind it, mirroring the novel's larger critique of a society built on surfaces."},
+  {ch:3,type:'id',q:"What does Nick's mixed attraction and disapproval toward Jordan Baker reveal about his character?",ans:"It shows Nick's tendency to overlook moral failings in people he finds attractive or interesting — a kind of selective honesty that complicates his claim to be one of the few honest people he knows."},
+  {ch:3,type:'id',q:"How does the car crash at the end of Chapter 3 foreshadow later events in the novel?",ans:"The careless driving and the crash caused by someone who didn't realize what they were doing foreshadows the fatal car accident later in the novel — and the broader theme of the careless rich causing destruction and walking away unharmed."},
+  {ch:3,type:'id',q:"How does Fitzgerald portray wealth in Chapter 3 through the party descriptions?",ans:"Wealth in Chapter 3 is shown as spectacle, excess, and noise rather than refinement or meaning. The parties are impressive but hollow — food and drink without real connection, glamour without purpose. This sets up the novel's critique of the American Dream as empty at its core."},
+
+  // ===================== CHAPTER 4 =====================
+  // MC (16)
+  {ch:4,type:'mc',q:"Who is Meyer Wolfsheim?",opts:["Gatsby's lawyer","The man who fixed the 1919 World Series and Gatsby's business associate","Daisy's father","A corrupt New York police officer"],ans:1},
+  {ch:4,type:'mc',q:"What does Gatsby claim his background is when talking to Nick in the car?",opts:["He grew up in poverty in rural Minnesota","He is the son of wealthy Midwestern people, educated at Oxford","He is a self-made bootlegger from Chicago","He is a war hero from the Deep South"],ans:1},
+  {ch:4,type:'mc',q:"What does Jordan reveal about Gatsby and Daisy's shared history?",opts:["They were never acquainted before","They had been in love five years earlier in Louisville","Gatsby had once worked for Daisy's father","Daisy was married to Gatsby before Tom"],ans:1},
+  {ch:4,type:'mc',q:"What does Gatsby ask Nick to arrange?",opts:["A letter delivered to Daisy","An invitation to the Buchanans' party","A tea reunion at Nick's house","A secret phone call to Daisy"],ans:2},
+  {ch:4,type:'mc',q:"What does Wolfsheim use as cufflinks?",opts:["Gold nuggets","Human molars","Diamonds","Ivory buttons"],ans:1},
+  {ch:4,type:'mc',q:"Who was Dan Cody?",opts:["Gatsby's Oxford professor","A wealthy silver and copper tycoon who mentored young Gatsby","A bootlegger who taught Gatsby his trade","Daisy's first love before Tom"],ans:1},
+  {ch:4,type:'mc',q:"What did Daisy do the night before her wedding to Tom?",opts:["She ran away briefly","She got drunk and held Gatsby's last letter, saying she had changed her mind","She called Gatsby on the phone","She wrote Tom a letter ending the engagement"],ans:1},
+  {ch:4,type:'mc',q:"What proof does Gatsby show Nick of his time at Oxford and war heroism?",opts:["A degree certificate and discharge papers","A medal from Montenegro and a photo from Oxford","A Congressional Medal of Honor","A British Victoria Cross"],ans:1},
+  {ch:4,type:'mc',q:"What is Gatsby's real name?",opts:["James Gatz","John Gatsby","Jay Gatz","James Gatsby"],ans:0},
+  {ch:4,type:'mc',q:"Where is Gatsby originally from?",opts:["Louisville, Kentucky","San Francisco, California","North Dakota","Chicago, Illinois"],ans:2},
+  {ch:4,type:'mc',q:"How long before the events of the novel did Gatsby and Daisy's romance take place?",opts:["Two years","Three years","Five years","Ten years"],ans:2},
+  {ch:4,type:'mc',q:"What happened to the money Dan Cody left Gatsby in his will?",opts:["Gatsby spent it all on his mansion","It was stolen by Wolfsheim","Cody's mistress Ella Kaye used legal means to prevent Gatsby from collecting it","The government seized it"],ans:2},
+  {ch:4,type:'mc',q:"Where did Gatsby and Daisy first fall in love?",opts:["New York City","Chicago","Louisville, Kentucky","Oxford, England"],ans:2},
+  {ch:4,type:'mc',q:"What does Gatsby offer Nick as payment for arranging the reunion with Daisy?",opts:["Cash","A car","A cut of his business dealings","A beach house"],ans:2},
+  {ch:4,type:'mc',q:"What event is Meyer Wolfsheim famous for being connected to?",opts:["The sinking of the Titanic","The 1919 World Series fix","The Wall Street crash","Prohibition enforcement"],ans:1},
+  {ch:4,type:'mc',q:"How did Daisy react after receiving Gatsby's letter before her wedding?",opts:["She burned it calmly","She cried for an hour then composed herself and went through with the wedding","She called the wedding off temporarily","She showed the letter to her mother"],ans:1},
+  // TF (14)
+  {ch:4,type:'tf',q:"Gatsby attended Oxford after World War I as part of a program for officers.",ans:true},
+  {ch:4,type:'tf',q:"Daisy married Tom Buchanan happily and without hesitation.",ans:false,correctText:"The night before the wedding, Daisy got drunk and had second thoughts, clutching Gatsby's letter. Jordan had to sober her up. She went through with the marriage the next day."},
+  {ch:4,type:'tf',q:"Meyer Wolfsheim is famous for fixing the 1919 World Series.",ans:true},
+  {ch:4,type:'tf',q:"Gatsby inherited all of Dan Cody's fortune when Cody died.",ans:false,correctText:"Gatsby was left money in Cody's will, but Ella Kaye (Cody's mistress) used legal means to prevent him from collecting it."},
+  {ch:4,type:'tf',q:"Nick agrees to help Gatsby arrange the reunion with Daisy.",ans:true},
+  {ch:4,type:'tf',q:"Gatsby's real name is James Gatz.",ans:true},
+  {ch:4,type:'tf',q:"Jordan Baker was present in Louisville when Daisy and Gatsby first fell in love.",ans:true},
+  {ch:4,type:'tf',q:"Gatsby's car is described as a death car — large, yellow, and conspicuous.",ans:true},
+  {ch:4,type:'tf',q:"Wolfsheim immediately likes Nick and invites him into the business.",ans:false,correctText:"Wolfsheim initially mistakes Nick for someone Gatsby wants to bring into his business, but when corrected he backs off. He is cautious and secretive."},
+  {ch:4,type:'tf',q:"Gatsby and Daisy's relationship began while Gatsby was stationed as an officer in Louisville.",ans:true},
+  {ch:4,type:'tf',q:"Dan Cody taught Gatsby the refined manners and appearance of a wealthy man.",ans:true},
+  {ch:4,type:'tf',q:"Gatsby tells Nick he earned his money through inheritance from his family.",ans:false,correctText:"Gatsby claims his family is dead and left him money, but this is part of his fabricated backstory. His wealth actually comes from illegal business dealings."},
+  {ch:4,type:'tf',q:"Nick is impressed and fully believes Gatsby's story about his background on the car ride.",ans:false,correctText:"Nick is initially skeptical — Gatsby's story sounds rehearsed and incredible. Only the physical evidence (medal, photo) makes Nick partly believe him."},
+  {ch:4,type:'tf',q:"Daisy sent Gatsby a letter while he was overseas during the war.",ans:false,correctText:"It was Gatsby who sent letters to Daisy. She waited for a while but eventually moved on and married Tom."},
+  // SA (12)
+  {ch:4,type:'sa',q:"What does Gatsby offer Nick in exchange for arranging the reunion with Daisy?",ans:"Gatsby offers to cut Nick in on a business deal — his bootlegging-connected business — as a way of repaying him for the favor."},
+  {ch:4,type:'sa',q:"What is Gatsby's real name and where is he originally from?",ans:"His real name is James Gatz, and he is originally from North Dakota in the rural Midwest."},
+  {ch:4,type:'sa',q:"Describe the lunch scene between Gatsby, Nick, and Meyer Wolfsheim.",ans:"They lunch at a restaurant in New York. Wolfsheim is secretive and paranoid, initially mistakes Nick for a business prospect, shows off his human molar cufflinks, and reminisces about a friend who was shot outside the restaurant years ago."},
+  {ch:4,type:'sa',q:"How long before the events of the novel did Gatsby and Daisy's relationship take place?",ans:"About five years — they fell in love in 1917 in Louisville before Gatsby shipped off to war."},
+  {ch:4,type:'sa',q:"What happened to Daisy while Gatsby was away at war?",ans:"She waited for a time but eventually married Tom Buchanan in 1919 — a grand wedding with a string of pearls worth $350,000. She received one last letter from Gatsby the night before but still went through with it."},
+  {ch:4,type:'sa',q:"What evidence does Gatsby show Nick to prove his background story is true?",ans:"He shows Nick a medal from Montenegro ('For Valour Extraordinary') and a photograph of himself at Oxford with other young men in cricket flannel."},
+  {ch:4,type:'sa',q:"What does Jordan tell Nick that Gatsby wants from this reunion with Daisy?",ans:"Gatsby wants Daisy to tell Tom she never loved him, and then for Daisy to come back to Gatsby — essentially erasing the past five years and returning to where they left off."},
+  {ch:4,type:'sa',q:"How does Nick describe Gatsby's car in Chapter 4?",ans:"He describes it as a death car — a rich cream color, enormous, with a labyrinth of windshields and a triumphant hat-box. It is extravagant and conspicuous."},
+  {ch:4,type:'sa',q:"Why did Dan Cody's fortune never reach Gatsby after Cody died?",ans:"Cody's mistress, Ella Kaye, used legal maneuvers to prevent Gatsby from receiving the $25,000 Cody had intended for him in his will."},
+  {ch:4,type:'sa',q:"What does Gatsby's fabricated backstory suggest about his relationship with the truth?",ans:"It shows that Gatsby is a thoroughgoing self-inventor — he has constructed an entirely false identity and recites it so often he almost believes it himself. Truth for Gatsby is subordinate to the dream he is trying to realize."},
+  {ch:4,type:'sa',q:"How does Gatsby describe his feelings for Daisy when talking to Jordan?",ans:"Through Jordan's account, Gatsby is clearly still deeply in love — he has spent five years building his fortune and positioning himself across the bay from her house, watching her green light, all with the intention of reuniting."},
+  {ch:4,type:'sa',q:"What does Nick think about Gatsby's elaborate backstory when he first hears it in the car?",ans:"Nick is skeptical and finds it hard to believe — it sounds rehearsed and too perfect. But the medal and photograph Gatsby produces as evidence make Nick lower his guard."},
+  // ID (10)
+  {ch:4,type:'id',q:"Who was Dan Cody and what role did he play in Gatsby's life?",ans:"Dan Cody was a self-made millionaire (silver and copper mining) whom young James Gatz met on Lake Superior. Cody hired him as a personal assistant and took him sailing for five years. This experience introduced Gatsby to wealth and taught him how to act rich. Cody left him $25,000 in his will, but Gatsby never received it due to Ella Kaye's legal interference."},
+  {ch:4,type:'id',q:"Why does Gatsby want Nick specifically to arrange the reunion with Daisy?",ans:"Nick is Daisy's cousin and lives next door to Gatsby — making him the natural bridge. Gatsby has been waiting and watching for years, and Nick's proximity and family connection make him the perfect intermediary without raising suspicion."},
+  {ch:4,type:'id',q:"What does Gatsby's fabricated backstory reveal about his character?",ans:"It reveals that Gatsby has constructed a completely false identity to make himself worthy of Daisy. He understands that Daisy's world values old money and education, so he invents a past that fits. It shows the depth of his self-reinvention and the fragility of his dream."},
+  {ch:4,type:'id',q:"What does Meyer Wolfsheim represent in the novel?",ans:"Wolfsheim represents the criminal underworld that Gatsby is connected to. He embodies the corruption beneath the glittering surface of the Jazz Age — the idea that much of the wealth and glamour of the era was built on illegal or immoral foundations."},
+  {ch:4,type:'id',q:"What does Daisy's behavior the night before her wedding suggest about her character?",ans:"It suggests she genuinely loved Gatsby and had serious doubts about marrying Tom. However, she ultimately chose wealth and social security over love — revealing that she is ultimately guided by comfort and class rather than deep feeling."},
+  {ch:4,type:'id',q:"How does Chapter 4 develop our understanding of the relationship between wealth and corruption in the novel?",ans:"Through Wolfsheim, we see that Gatsby's wealth is built on crime. Through Daisy's wedding, we see that Tom's wealth bought him what Gatsby could not yet offer. Chapter 4 reveals that in this world, money is the ultimate power — and the means of acquiring it rarely matters."},
+  {ch:4,type:'id',q:"What does Gatsby's obsession with recreating the past with Daisy reveal about his psychology?",ans:"It reveals that Gatsby is fundamentally backward-looking — his entire identity is organized around restoring a moment from five years ago. He cannot accept that time has passed and Daisy has moved on. His belief that he can repeat the past is both his defining quality and his fatal flaw."},
+  {ch:4,type:'id',q:"How does the car journey with Gatsby in Chapter 4 establish his character for Nick?",ans:"The journey shows Gatsby performing — presenting his fabricated life story, producing physical evidence, speeding recklessly, being greeted warmly by a police officer (suggesting bribery). Nick sees both the charm and the artificiality of Gatsby simultaneously."},
+  {ch:4,type:'id',q:"What is the significance of Daisy having worn white and Gatsby his uniform when they first fell in love?",ans:"White suggests purity and idealism — Daisy in the first flush of romance. The uniform gives Gatsby a borrowed identity that made him appear to belong to Daisy's class. Their romance was built on an illusion of equality that vanished once Gatsby was just a poor soldier again."},
+  {ch:4,type:'id',q:"How does Jordan's narration of Gatsby and Daisy's history affect Nick's perception of Gatsby?",ans:"It transforms Gatsby from an enigmatic rich man throwing parties into a tragic romantic figure — someone who has organized his entire life around one dream. Nick becomes more sympathetic and invested in Gatsby's story, which affects his increasingly partial narration."},
+
+  // ===================== CHAPTER 5 =====================
+  // MC (16)
+  {ch:5,type:'mc',q:"Where does the reunion between Gatsby and Daisy take place?",opts:["At Gatsby's mansion","At the Buchanans' house","At Nick's small house","At a restaurant in New York"],ans:2},
+  {ch:5,type:'mc',q:"How does Gatsby appear when Daisy first arrives for the reunion?",opts:["Confident and suave","Nervous, pale, and nearly flees beforehand","Drunk and disheveled","Formal and cold"],ans:1},
+  {ch:5,type:'mc',q:"What does Gatsby show Daisy in his mansion that makes her cry?",opts:["His collection of rare cars","His pile of expensive colorful shirts","His view of the green light","His war medals"],ans:1},
+  {ch:5,type:'mc',q:"Why did Gatsby buy his mansion on West Egg?",opts:["It was the cheapest available","It was directly across the bay from Daisy's house","He won it in a card game","It reminded him of his childhood home"],ans:1},
+  {ch:5,type:'mc',q:"What does Nick observe about Gatsby's dream once he is reunited with Daisy?",opts:["Gatsby seems completely satisfied","The dream seems even more alive than before","The reality of Daisy cannot quite match the enormity of the dream","Gatsby immediately proposes to Daisy"],ans:2},
+  {ch:5,type:'mc',q:"Who is Klipspringer?",opts:["Gatsby's butler","A freeloader who essentially lives in Gatsby's mansion","A business associate of Gatsby's","Nick's colleague at the bond firm"],ans:1},
+  {ch:5,type:'mc',q:"What does Gatsby do to prepare Nick's house for Daisy's arrival?",opts:["Sends his servants to clean it","Has flowers delivered and the lawn cut","Decorates it with green lights","Sends Daisy a gift basket"],ans:1},
+  {ch:5,type:'mc',q:"What does Nick do just before Daisy arrives to give Gatsby a moment?",opts:["He steps outside to get flowers","He goes next door to get champagne","He steps out into the rain briefly","He calls Daisy to delay her"],ans:2},
+  {ch:5,type:'mc',q:"What is the weather like when Daisy arrives at Nick's house for the reunion?",opts:["Sunny and warm","Cloudy but dry","Raining","Stormy with thunder"],ans:2},
+  {ch:5,type:'mc',q:"What song does Klipspringer play on the piano during the reunion?",opts:["The Blue Danube","In the Meantime","Ain't We Got Fun","Sweet Georgia Brown"],ans:2},
+  {ch:5,type:'mc',q:"What does Gatsby nearly knock over while nervously talking to Daisy at Nick's house?",opts:["A vase of flowers","A lamp","A mantel clock","A tea tray"],ans:2},
+  {ch:5,type:'mc',q:"Where does Nick go while Gatsby and Daisy are left alone at Nick's house?",opts:["He stays in the room with them","He walks to the store","He goes outside into the garden and waits","He drives to Gatsby's mansion"],ans:2},
+  {ch:5,type:'mc',q:"What does Gatsby show Daisy from his bedroom window?",opts:["His rose garden","His swimming pool","The dock and the green light across the water","His collection of trophies"],ans:2},
+  {ch:5,type:'mc',q:"How does Gatsby's face look when Nick returns to find him with Daisy after the initial awkwardness passes?",opts:["Still pale and anxious","Radiant and glowing with happiness","Expressionless and controlled","Overwhelmed and tearful"],ans:1},
+  {ch:5,type:'mc',q:"What does Gatsby have delivered to Nick's house before the reunion?",opts:["Champagne and caviar","A greenhouse worth of flowers","A piano and a pianist","New furniture for Nick's living room"],ans:1},
+  {ch:5,type:'mc',q:"How does Nick describe the quality of Gatsby's dream once Daisy is present?",opts:["It has grown even larger","It has been perfectly fulfilled","The colossal significance of the dream has diminished now that it is real","It was never real to begin with"],ans:2},
+  // TF (14)
+  {ch:5,type:'tf',q:"After their reunion, Daisy is disappointed with Gatsby's mansion.",ans:false,correctText:"Daisy is overwhelmed and delighted by Gatsby's mansion and possessions — she cries at his beautiful shirts."},
+  {ch:5,type:'tf',q:"Nick observes that Gatsby's dream cannot quite match the reality of being reunited with Daisy.",ans:true},
+  {ch:5,type:'tf',q:"It is raining when Daisy arrives at Nick's house for the reunion.",ans:true},
+  {ch:5,type:'tf',q:"Gatsby arranged for flowers to be sent to Nick's house before Daisy arrived.",ans:true},
+  {ch:5,type:'tf',q:"Gatsby immediately shows Daisy the green light when she arrives at Nick's.",ans:false,correctText:"Gatsby shows Daisy the green light later, during their tour of his mansion — pointing across the bay to show her what he has been watching."},
+  {ch:5,type:'tf',q:"Nick leaves Gatsby and Daisy alone together for a period during their reunion.",ans:true},
+  {ch:5,type:'tf',q:"Klipspringer willingly and cheerfully plays the piano for Gatsby and Daisy.",ans:false,correctText:"Klipspringer is reluctant and protests, but Gatsby insists he play. He stumbles through 'Ain't We Got Fun.'"},
+  {ch:5,type:'tf',q:"Gatsby is completely calm and composed when Daisy first arrives.",ans:false,correctText:"Gatsby is extremely nervous — he turns pale, nearly knocks over a clock, and is awkward and stilted in conversation until the initial tension breaks."},
+  {ch:5,type:'tf',q:"Gatsby's mansion is directly across the bay from Daisy's house on East Egg.",ans:true},
+  {ch:5,type:'tf',q:"Daisy cries when she sees Gatsby's shirts because she is sad about the years they lost.",ans:false,correctText:"Daisy cries because the shirts are so beautiful — she is overwhelmed by his wealth and taste. It is a materially-charged emotional moment."},
+  {ch:5,type:'tf',q:"Nick finds the reunion between Gatsby and Daisy completely comfortable to witness.",ans:false,correctText:"Nick feels like an intruder — he steps outside to give them privacy, feeling the reunion is too intimate and overwhelming to observe."},
+  {ch:5,type:'tf',q:"Chapter 5 contains the first time Gatsby and Daisy have seen each other in five years.",ans:true},
+  {ch:5,type:'tf',q:"The green light loses some of its symbolic significance once Daisy is actually present.",ans:true},
+  {ch:5,type:'tf',q:"Gatsby gives Nick money to pay for the flowers and preparation for the reunion.",ans:true},
+  // SA (12)
+  {ch:5,type:'sa',q:"What does the green light mean to Gatsby now that Daisy is in front of him?",ans:"Nick reflects that the green light has lost some of its immense symbolic power — it had represented Gatsby's longing and dream of Daisy, but now that she is real and present, the symbol is diminished. The enchanted object has become just a light on a dock."},
+  {ch:5,type:'sa',q:"Who is Klipspringer and what does he do during the reunion?",ans:"Klipspringer is a freeloader who essentially lives for free at Gatsby's mansion. Gatsby asks him to play the piano, and he reluctantly plays 'Ain't We Got Fun' and other songs while Gatsby and Daisy are together."},
+  {ch:5,type:'sa',q:"Describe Gatsby's reaction when he and Daisy are finally alone after the initial awkwardness passes.",ans:"Once the initial awkwardness passes, Gatsby becomes glowing and radiant with happiness. Nick feels he is intruding on a private moment of extraordinary joy and steps outside."},
+  {ch:5,type:'sa',q:"What does Gatsby tell Daisy about the green light during the mansion tour?",ans:"Gatsby tells her he has watched that green light for years — it was across the water at the end of her dock. It represented his dream of her. Now she is here, and it has become just a light again."},
+  {ch:5,type:'sa',q:"What does Gatsby's lawn and garden look like when Nick arranges the tea?",ans:"Gatsby sends his gardeners to cut Nick's overgrown lawn and has the house filled with fresh flowers — hundreds of dollars' worth — so everything is perfect for Daisy's arrival."},
+  {ch:5,type:'sa',q:"How does Gatsby's nervousness before the reunion contrast with his usual controlled persona?",ans:"Gatsby, who normally projects confidence and mystery, nearly leaves before Daisy arrives — he is pale, awkward, and almost falls over a mantel clock. It shows how completely Daisy undoes his carefully constructed self-image."},
+  {ch:5,type:'sa',q:"How does Daisy react when she first sees Gatsby after five years?",ans:"She is moved and emotional — there are tears in her eyes. After the initial shock, she becomes warm and enchanted, as the old feeling between them begins to return."},
+  {ch:5,type:'sa',q:"What does Nick notice about the pacing and mood after Gatsby and Daisy's reunion begins properly?",ans:"Nick notices a sense of almost anticlimactic calm — as if the dream Gatsby has sustained for five years is already beginning to be outpaced by the reality of Daisy as a real, imperfect person."},
+  {ch:5,type:'sa',q:"How does Gatsby's tour of his mansion reveal his motivations to the reader?",ans:"Everything in the mansion is presented as if for Daisy's approval — each room, each possession is shown to her. The mansion was built for this moment, and Gatsby watches her reactions closely, needing her to validate everything he has become."},
+  {ch:5,type:'sa',q:"What does Gatsby do to his hair and appearance before the reunion?",ans:"Gatsby arrives at Nick's house impeccably dressed — in a white flannel suit, silver shirt, and gold tie. His appearance is as carefully constructed as ever, suggesting the reunion is a performance as much as an emotional event."},
+  {ch:5,type:'sa',q:"How does Nick feel about playing the role of matchmaker for Gatsby and Daisy?",ans:"Nick feels slightly awkward and out of place, but he is also moved by Gatsby's obvious sincerity and the magnitude of what is happening. He steps back and observes with a mix of sympathy and detachment."},
+  {ch:5,type:'sa',q:"What does Nick mean when he says the 'colossal significance' of the green light had vanished?",ans:"He means that Gatsby's dream was powerful precisely because it was unattained — the green light was a symbol of longing. Now that Daisy is real and present, the dream collapses into reality, which can never be as perfect as the ideal that sustained it."},
+  // ID (10)
+  {ch:5,type:'id',q:"Explain how Gatsby's reaction to seeing Daisy after five years reveals his character.",ans:"His nervousness and near-flight reveal that his entire persona is built around this one dream. Despite the wealth and confidence he projects to the world, Daisy undoes him completely. He has idealized her for so long that the real person is almost impossible to face — showing both the depth of his love and the danger of placing a dream above reality."},
+  {ch:5,type:'id',q:"What does the scene with Gatsby's colorful shirts tell us about Daisy and her values?",ans:"Daisy cries at the sight of Gatsby's beautiful shirts — overwhelmed by his wealth and taste. The scene subtly suggests that her love for Gatsby is entangled with materialism. She is moved not just by him but by what he has accumulated — by the proof that he has become someone worthy of her world."},
+  {ch:5,type:'id',q:"What does Nick mean when he says 'the colossal significance of that light had now vanished forever'?",ans:"Nick means that Gatsby's green light was only powerful as a symbol of a longed-for, unattained dream. Now that Daisy is real and present, the symbol collapses. This hints at the novel's deeper theme: that dreams are often more powerful (and more dangerous) than their fulfillment."},
+  {ch:5,type:'id',q:"Why is it significant that Gatsby bought his mansion directly across the bay from Daisy?",ans:"It shows that Gatsby's entire life after meeting Daisy has been organized around one goal — getting back to her. He didn't choose his home for comfort or status alone; he chose it as a watchtower, a place to watch her light and imagine reunion. It reveals the obsessive, single-minded nature of his dream."},
+  {ch:5,type:'id',q:"What does the reunion scene suggest about the nature of Gatsby's dream?",ans:"It suggests that Gatsby's dream was always more about the idea of Daisy than the real person. When she finally arrives, there is an anticlimactic quality — the dream was so enormous that reality cannot match it. Nick senses that Gatsby's happiness is already slightly past its peak the moment it arrives, foreshadowing the tragedy ahead."},
+  {ch:5,type:'id',q:"How does the rain in Chapter 5 function symbolically?",ans:"The rain at the start of the reunion creates tension and awkwardness — it mirrors the emotional storm of the meeting. When the sun comes out, it reflects the warming between Gatsby and Daisy. Fitzgerald uses weather as an emotional barometer throughout this chapter."},
+  {ch:5,type:'id',q:"What does Gatsby's obsessive preparation for the reunion — flowers, lawn, clothes — reveal about him?",ans:"It reveals that for Gatsby, this moment has been rehearsed in his imagination for five years. Every detail must be perfect because Daisy is not just a person to him — she is the embodiment of his dream. The preparation shows both his devotion and his inability to accept imperfection or reality."},
+  {ch:5,type:'id',q:"How does the dynamic between Nick, Gatsby, and Daisy in Chapter 5 develop Nick's role in the novel?",ans:"Nick becomes increasingly implicated in Gatsby's dream — he is not just a passive observer but an active enabler. His willingness to host the reunion makes him responsible for what follows. His role as facilitator complicates his moral standing as a narrator who claims detachment."},
+  {ch:5,type:'id',q:"What does Daisy's emotional response to Gatsby's mansion suggest about her as a character?",ans:"Her delight and tears reveal that she is drawn to Gatsby's wealth as much as to Gatsby himself. She is not simply reconnecting with a lost love — she is being seduced by what he has become. This raises the question of whether she loves Gatsby or what Gatsby represents."},
+  {ch:5,type:'id',q:"How does Chapter 5 function as both the climax and the beginning of the end for Gatsby's dream?",ans:"It is the climax because the reunion Gatsby has engineered his entire life around finally happens. But it is also the beginning of the end because the moment the dream is realized, it begins to diminish — reality can never live up to five years of idealization. The green light loses its power, and the dream has nowhere left to grow."},
+];
+
+// ===== STATE =====
+let selectedChapters = new Set();
+let selectedTypes = new Set();
+let questionCount = 10;
+let quizQuestions = [];
+let currentIdx = 0;
+let score = 0;
+let answered = false;
+let currentOverride = null; // 'correct' | 'incorrect' | null
+
+const typeLabels = { mc:'Multiple Choice', tf:'True / False', sa:'Short Answer', id:'Identification' };
+const chapterNames = {1:'Chapter I',2:'Chapter II',3:'Chapter III',4:'Chapter IV',5:'Chapter V'};
+
+// ===== HOME LOGIC =====
+function updatePoolNotice() {
+  const pool = ALL_QUESTIONS.filter(q => selectedChapters.has(q.ch) && selectedTypes.has(q.type));
+  const notice = document.getElementById('poolNotice');
+  const text = document.getElementById('poolNoticeText');
+  if (pool.length === 0 || pool.length >= questionCount) {
+    notice.classList.remove('show');
+    return;
+  }
+  notice.classList.add('show');
+  text.innerHTML = `Only <strong>${pool.length}</strong> questions match your selection — quiz will be capped at ${pool.length}.`;
+}
+
+function toggleChapter(btn) {
+  const ch = parseInt(btn.dataset.ch);
+  if (selectedChapters.has(ch)) { selectedChapters.delete(ch); btn.classList.remove('selected'); }
+  else { selectedChapters.add(ch); btn.classList.add('selected'); }
+  updatePoolNotice();
+}
+function selectAllChapters() {
+  document.querySelectorAll('.chapter-btn').forEach(b => { b.classList.add('selected'); selectedChapters.add(parseInt(b.dataset.ch)); });
+  updatePoolNotice();
+}
+function clearChapters() {
+  document.querySelectorAll('.chapter-btn').forEach(b => { b.classList.remove('selected'); });
+  selectedChapters.clear();
+  updatePoolNotice();
+}
+function toggleType(btn) {
+  const t = btn.dataset.type;
+  if (selectedTypes.has(t)) { selectedTypes.delete(t); btn.classList.remove('selected'); }
+  else { selectedTypes.add(t); btn.classList.add('selected'); }
+  updatePoolNotice();
+}
+function selectAllTypes() {
+  document.querySelectorAll('.type-btn').forEach(b => { b.classList.add('selected'); selectedTypes.add(b.dataset.type); });
+  updatePoolNotice();
+}
+function clearTypes() {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  selectedTypes.clear();
+  updatePoolNotice();
+}
+function updateSlider(el) {
+  questionCount = parseInt(el.value);
+  document.getElementById('sliderDisplay').innerHTML = `${questionCount} <span>questions</span>`;
+  const min = parseInt(el.min), max = parseInt(el.max);
+  const pct = (questionCount - min) / (max - min);
+  document.getElementById('sliderFill').style.width = (pct * 100) + '%';
+  document.getElementById('sliderThumb').style.left = (pct * 100) + '%';
+  updatePoolNotice();
+}
+// init slider track
+(function(){ const el = document.getElementById('qSlider'); updateSlider(el); })();
+
+// Trigger home entrance animation on load
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('home').classList.add('animate-in'), 100);
+});
+
+function goHome() { showScreen('home'); }
+
+function showScreen(id) {
+  const current = document.querySelector('.screen.active');
+  const next = document.getElementById(id);
+  if (current && current !== next) {
+    current.classList.add('exiting');
+    setTimeout(() => {
+      current.classList.remove('active', 'exiting', 'animate-in');
+    }, 450);
+  }
+  setTimeout(() => {
+    next.classList.add('active');
+    void next.offsetWidth; // force reflow
+    if (id === 'home' || id === 'results') {
+      next.classList.add('animate-in');
+    }
+  }, current && current !== next ? 200 : 0);
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  const err = document.getElementById('errorMsg');
+  if (selectedChapters.size === 0 || selectedTypes.size === 0) {
+    err.classList.add('show'); return;
+  }
+  err.classList.remove('show');
+
+  let pool = ALL_QUESTIONS.filter(q => selectedChapters.has(q.ch) && selectedTypes.has(q.type));
+  if (pool.length === 0) {
+    err.textContent = "No questions match your selections. Try different options.";
+    err.classList.add('show'); return;
+  }
+  // Shuffle
+  pool = pool.sort(() => Math.random() - 0.5);
+  quizQuestions = pool.slice(0, Math.min(questionCount, pool.length));
+
+  if (pool.length < questionCount) {
+    err.textContent = `Only ${pool.length} questions match your selections — starting with all of them.`;
+    err.classList.add('show');
+  }
+
+  currentIdx = 0; score = 0; answered = false; currentOverride = null;
+  document.getElementById('qTotal').textContent = quizQuestions.length;
+  updateScoreDisplay();
+  showScreen('quiz');
+  renderQuestion();
+}
+
+// ===== QUIZ LOGIC =====
+function renderQuestion() {
+  const q = quizQuestions[currentIdx];
+  answered = false; currentOverride = null;
+
+  const card = document.getElementById('questionCard');
+  card.classList.remove('slide-in', 'slide-out');
+  void card.offsetWidth;
+  card.classList.add('slide-in');
+
+  document.getElementById('qNum').textContent = currentIdx + 1;
+  document.getElementById('qTotal').textContent = quizQuestions.length;
+  document.getElementById('qChapterTag').textContent = chapterNames[q.ch];
+  document.getElementById('qTypeTag').textContent = typeLabels[q.type];
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('progressBar').style.width = ((currentIdx / quizQuestions.length) * 100) + '%';
+  document.getElementById('answerReveal').classList.remove('show');
+  document.getElementById('overrideRow').style.display = 'none';
+  document.getElementById('nextBtn').classList.remove('show');
+  document.getElementById('overrideCorrect').classList.remove('active');
+  document.getElementById('overrideIncorrect').classList.remove('active');
+
+  const area = document.getElementById('answersArea');
+  area.innerHTML = '';
+
+  if (q.type === 'mc') {
+    const list = document.createElement('div');
+    list.className = 'options-list';
+    const letters = ['A','B','C','D'];
+    q.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+      btn.onclick = () => handleMC(i, q.ans, btn, list);
+      list.appendChild(btn);
+    });
+    area.appendChild(list);
+  } else if (q.type === 'tf') {
+    const wrap = document.createElement('div');
+    wrap.className = 'tf-wrap';
+    ['True','False'].forEach((label, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      const isTrue = label === 'True';
+      btn.innerHTML = `<span class="opt-letter">${label === 'True' ? 'T' : 'F'}</span><span>${label}</span>`;
+      btn.onclick = () => handleTF(isTrue, q.ans, btn, wrap, q);
+      wrap.appendChild(btn);
+    });
+    area.appendChild(wrap);
+  } else {
+    const wrap = document.createElement('div');
+    wrap.className = 'short-answer-wrap';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'short-answer-input';
+    input.placeholder = 'Type your answer here…';
+    input.id = 'saInput';
+    const submitBtn = document.createElement('button');
+    submitBtn.className = 'submit-answer-btn';
+    submitBtn.textContent = 'Submit Answer';
+    submitBtn.onclick = () => handleSA(q, input.value);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') handleSA(q, input.value); });
+    wrap.appendChild(input);
+    wrap.appendChild(submitBtn);
+    area.appendChild(wrap);
+  }
+}
+
+function handleMC(chosen, correct, clickedBtn, list) {
+  if (answered) return;
+  answered = true;
+  const buttons = list.querySelectorAll('.option-btn');
+  buttons.forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('correct');
+    else if (i === chosen && chosen !== correct) b.classList.add('incorrect');
+  });
+  const isCorrect = chosen === correct;
+  if (isCorrect) score++;
+  updateScoreDisplay();
+  showOverride(isCorrect);
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function handleTF(chosen, correct, clickedBtn, wrap, q) {
+  if (answered) return;
+  answered = true;
+  const buttons = wrap.querySelectorAll('.option-btn');
+  buttons.forEach(b => b.disabled = true);
+  const isCorrect = chosen === correct;
+  clickedBtn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  // Find correct button
+  buttons.forEach(b => {
+    const bIsTrue = b.querySelector('.opt-letter').textContent === 'T';
+    if (bIsTrue === correct) b.classList.add(b === clickedBtn ? '' : 'reveal-correct');
+  });
+  if (!isCorrect && q.correctText) {
+    document.getElementById('revealText').textContent = q.correctText;
+    document.getElementById('answerReveal').classList.add('show');
+  }
+  if (isCorrect) score++;
+  updateScoreDisplay();
+  showOverride(isCorrect);
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function handleSA(q, val) {
+  if (answered || !val.trim()) return;
+  answered = true;
+  const input = document.getElementById('saInput');
+  if (input) input.disabled = true;
+  const submitBtn = document.querySelector('.submit-answer-btn');
+  if (submitBtn) submitBtn.disabled = true;
+
+  // Show correct answer
+  document.getElementById('revealText').textContent = q.ans;
+  document.getElementById('answerReveal').classList.add('show');
+
+  // For SA/ID, we don't auto-score — user must override
+  showOverride(null);
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function showOverride(autoResult) {
+  const row = document.getElementById('overrideRow');
+  row.style.display = 'flex';
+  if (autoResult === true) {
+    document.getElementById('overrideCorrect').classList.add('active');
+    currentOverride = 'correct';
+  } else if (autoResult === false) {
+    document.getElementById('overrideIncorrect').classList.add('active');
+    currentOverride = 'incorrect';
+  } else {
+    // SA/ID: no auto, user must pick
+    currentOverride = null;
+  }
+}
+
+function overrideResult(result) {
+  const q = quizQuestions[currentIdx];
+  const prev = currentOverride;
+  currentOverride = result;
+
+  // Adjust score
+  if (prev === 'correct' && result === 'incorrect') score--;
+  else if (prev === 'incorrect' && result === 'correct') score++;
+  else if (prev === null && result === 'correct') score++;
+  else if (prev === null && result === 'incorrect') { /* no change */ }
+
+  score = Math.max(0, Math.min(score, currentIdx + 1));
+  updateScoreDisplay();
+
+  document.getElementById('overrideCorrect').classList.toggle('active', result === 'correct');
+  document.getElementById('overrideIncorrect').classList.toggle('active', result === 'incorrect');
+}
+
+function nextQuestion() {
+  const card = document.getElementById('questionCard');
+  card.classList.remove('slide-in');
+  void card.offsetWidth;
+  card.classList.add('slide-out');
+  setTimeout(() => {
+    currentIdx++;
+    if (currentIdx >= quizQuestions.length) {
+      showResults();
+    } else {
+      renderQuestion();
+    }
+  }, 250);
+}
+
+function updateScoreDisplay() {
+  const answered_count = currentIdx + (answered ? 1 : 0);
+  const el = document.getElementById('scoreDisplay');
+  el.textContent = `${score} / ${answered_count}`;
+  el.classList.remove('score-bump');
+  void el.offsetWidth;
+  el.classList.add('score-bump');
+  const pct = answered_count > 0 ? Math.round((score / answered_count) * 100) : 0;
+  document.getElementById('scorePct').textContent = answered_count > 0 ? `${pct}%` : '—';
+}
+
+// ===== CONFETTI =====
+function launchConfetti(count) {
+  const colors = ['#C9A84C','#E8C96A','#00FF88','#FFFFFF','#FFD700','#8B6914'];
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    const size = 6 + Math.random() * 8;
+    p.style.cssText = `left:${Math.random()*100}vw;top:-20px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.5?'50%':'2px'};animation:confettiFall ${2+Math.random()*3}s ease ${Math.random()*1.5}s forwards;`;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 5500);
+  }
+}
+
+// ===== RESULTS =====
+const quotes = [
+  { pct: 90, text: "\"Can't repeat the past? Why of course you can!\" — You've mastered Gatsby's world.", grade: "Magnificent" },
+  { pct: 75, text: "\"So we beat on, boats against the current\" — A strong effort, but the past still calls.", grade: "Distinguished" },
+  { pct: 60, text: "\"I was within and without…\" — A respectable showing, room to grow.", grade: "Decent" },
+  { pct: 0, text: "\"Her voice is full of money\" — The green light still glimmers ahead of you. Keep studying.", grade: "Keep Studying" },
+];
+
+function showResults() {
+  const total = quizQuestions.length;
+  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+  const q = quotes.find(q => pct >= q.pct) || quotes[quotes.length-1];
+
+  document.getElementById('resultsGrade').textContent = q.grade;
+  document.getElementById('resultsPct').textContent = pct + '%';
+  document.getElementById('resultsFrac').textContent = `${score} of ${total} correct`;
+  document.getElementById('resultQuote').textContent = q.text;
+  document.getElementById('progressBar').style.width = '100%';
+
+  showScreen('results');
+  if (pct >= 75) setTimeout(() => launchConfetti(pct >= 90 ? 80 : 40), 700);
+}
+</script>
+</body>
+</html>
