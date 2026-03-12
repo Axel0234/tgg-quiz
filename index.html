@@ -47,21 +47,7 @@
     position: fixed;
     inset: 0;
     z-index: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background: transparent;
-    pointer-events: none;
-  }
-  .screen.active { visibility: visible; pointer-events: auto; }
-
-  /* ===== SCREEN TRANSITIONS ===== */
-  .screen {
-    visibility: hidden;
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     background: transparent;
     pointer-events: none;
     opacity: 0;
@@ -75,6 +61,13 @@
   .screen.exiting {
     opacity: 0;
     pointer-events: none;
+  }
+  /* Full-viewport scroll wrapper — scrollbar sits at true right edge */
+  .screen-scroll {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   /* ===== HOME ENTRANCE ANIMATIONS ===== */
@@ -278,7 +271,8 @@
 
   /* ===== HOME SCREEN ===== */
   #home {
-    min-height: 100vh;
+    flex: 1;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1339,7 +1333,10 @@
     display: flex;
     gap: 8px;
     align-items: center;
-    padding-bottom: 10px;
+    padding: 10px 0;
+    margin: 8px 0 4px;
+    border-top: 1px solid rgba(201,168,76,0.12);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
   }
   .override-label {
     font-family: 'Josefin Sans', sans-serif;
@@ -1369,12 +1366,11 @@
 
   /* Sticky footer — always visible above the fold */
   .quiz-footer {
-    position: sticky;
-    bottom: 0;
+    flex-shrink: 0;
     z-index: 10;
-    background: linear-gradient(to bottom, transparent, var(--navy) 28%);
-    padding: 18px 0 6px;
-    margin-top: 8px;
+    background: var(--navy);
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding: 12px 20px 16px;
   }
 
   /* Next button */
@@ -2036,6 +2032,7 @@
 </svg>
 </div>
 <div id="home" class="screen active">
+<div class="screen-scroll" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100%;">
   <div class="hero">
     <div class="hero-eyebrow">F. Scott Fitzgerald</div>
     <div class="hero-title">The <em>Great</em><br>Gatsby</div>
@@ -2116,9 +2113,11 @@
     <div class="claude-disclaimer">Made with <a href="https://claude.ai" target="_blank">Claude</a> by Anthropic</div>
   </div>
 </div>
+</div>
 
 <!-- ===== ESSAY ===== -->
 <div id="essay" class="screen">
+<div class="screen-scroll">
   <div class="essay-inner">
     <div class="hero" style="margin-bottom:24px;">
       <div class="hero-eyebrow">F. Scott Fitzgerald</div>
@@ -2137,9 +2136,11 @@
     <div id="essayContent"></div>
   </div>
 </div>
+</div>
 
 <!-- ===== SUMMARY ===== -->
 <div id="summary" class="screen">
+<div class="screen-scroll">
   <div class="summary-inner">
     <div class="hero" style="margin-bottom:24px;">
       <div class="hero-eyebrow">F. Scott Fitzgerald</div>
@@ -2158,9 +2159,11 @@
     <div id="summaryContent"></div>
   </div>
 </div>
+</div>
 
 <!-- ===== CHARACTERS ===== -->
 <div id="characters" class="screen">
+<div class="screen-scroll">
   <div class="characters-inner">
     <div class="hero" style="margin-bottom:24px;">
       <div class="hero-eyebrow">F. Scott Fitzgerald</div>
@@ -2201,38 +2204,43 @@
     <div class="char-grid" id="charGrid"></div>
   </div>
 </div>
+</div>
 
 <!-- ===== QUIZ ===== -->
-<div id="quiz" class="screen">
-  <div class="quiz-header">
-    <button class="back-btn" onclick="goHome()">← Back</button>
-    <div class="progress-area">
-      <div class="progress-fraction"><strong id="qNum">1</strong> / <span id="qTotal">10</span></div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:10%"></div></div>
+<div id="quiz" class="screen" style="display:flex; flex-direction:column; overflow:hidden;">
+  <div style="flex:1; overflow-y:auto; overflow-x:hidden;">
+    <div style="padding: 32px 20px 32px; max-width: 680px; margin: 0 auto; width: 100%;">
+    <div class="quiz-header">
+      <button class="back-btn" onclick="goHome()">← Back</button>
+      <div class="progress-area">
+        <div class="progress-fraction"><strong id="qNum">1</strong> / <span id="qTotal">10</span></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:10%"></div></div>
+      </div>
     </div>
-  </div>
 
-  <div class="question-card" id="questionCard">
-    <div class="q-meta">
-      <span class="q-chapter-tag" id="qChapterTag">Chapter I</span>
-      <span class="q-type-tag" id="qTypeTag">Multiple Choice</span>
+    <div class="question-card" id="questionCard">
+      <div class="q-meta">
+        <span class="q-chapter-tag" id="qChapterTag">Chapter I</span>
+        <span class="q-type-tag" id="qTypeTag">Multiple Choice</span>
+      </div>
+      <div class="question-text" id="questionText"></div>
+      <div id="answersArea"></div>
+      <div class="answer-reveal" id="answerReveal">
+        <div class="reveal-label" id="revealLabel">Correct Answer</div>
+        <div class="reveal-text" id="revealText"></div>
+        <div class="override-row" id="overrideRow" style="display:none">
+          <span class="override-label">Override Result:</span>
+          <button class="override-correct-btn" id="overrideCorrect" onclick="overrideResult('correct')">✓ Mark Correct</button>
+          <button class="override-incorrect-btn" id="overrideIncorrect" onclick="overrideResult('incorrect')">✗ Mark Incorrect</button>
+        </div>
+        <div class="reveal-explanation-label">📖 Explanation</div>
+        <div class="reveal-explanation" id="revealExplanation"></div>
+      </div>
     </div>
-    <div class="question-text" id="questionText"></div>
-    <div id="answersArea"></div>
-    <div class="answer-reveal" id="answerReveal">
-      <div class="reveal-label" id="revealLabel">Correct Answer</div>
-      <div class="reveal-text" id="revealText"></div>
-      <div class="reveal-explanation-label">📖 Explanation</div>
-      <div class="reveal-explanation" id="revealExplanation"></div>
     </div>
   </div>
 
   <div class="quiz-footer">
-    <div class="override-row" id="overrideRow" style="display:none">
-      <span class="override-label">Override Result:</span>
-      <button class="override-correct-btn" id="overrideCorrect" onclick="overrideResult('correct')">✓ Mark Correct</button>
-      <button class="override-incorrect-btn" id="overrideIncorrect" onclick="overrideResult('incorrect')">✗ Mark Incorrect</button>
-    </div>
     <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
     <div class="score-strip">
       <div class="score-label">Score</div>
@@ -2246,6 +2254,7 @@
 
 <!-- ===== RESULTS ===== -->
 <div id="results" class="screen">
+<div class="screen-scroll" style="display:flex; align-items:center; justify-content:center; min-height:100%;">
   <div class="results-title" id="resultsGrade"></div>
   <div class="results-subtitle">Quiz Complete</div>
   <div class="deco-line"><div class="deco-diamond"></div></div>
@@ -2258,6 +2267,7 @@
     <button class="results-btn primary" onclick="startQuiz()">Retake Quiz</button>
     <button class="results-btn secondary" onclick="goHome()">New Settings</button>
   </div>
+</div>
 </div>
 
 <script>
@@ -2493,7 +2503,7 @@ const ALL_QUESTIONS = [
   {ch:7,type:'mc',q:"Where does the group go on the hot day in Chapter 7?",opts:["Gatsby's mansion","A hotel suite in New York City","East Egg beach","The Buchanans' country club"],ans:1,explanation:"The group — Gatsby, Daisy, Tom, Nick, and Jordan — drives to New York City and takes a suite at the Plaza Hotel. The confrontation between Gatsby and Tom takes place there in the sweltering heat. The confined space and the heat amplify the tension."},
   {ch:7,type:'mc',q:"What does Tom accuse Gatsby of during the Plaza confrontation?",opts:["Being in love with Jordan Baker","Bootlegging and running drug stores that sold grain alcohol over the counter","Having a criminal past as a spy","Trying to defraud investors"],ans:1,explanation:"Tom accuses Gatsby of bootlegging and specifically of owning a chain of drug stores used to sell grain alcohol — illegal liquor. The accusation is accurate. Tom uses it not just to expose Gatsby to Nick but to undercut him in front of Daisy, stripping away the romantic image Gatsby has constructed."},
   {ch:7,type:'mc',q:"What significant thing does Daisy fail to do during the Plaza confrontation?",opts:["Leave the hotel with Gatsby","Stand up to Tom","Say she never loved Tom, as Gatsby demands","Introduce Gatsby as her friend"],ans:2,explanation:"Gatsby demands that Daisy tell Tom she never loved him. Daisy tries but ultimately cannot. She says she did love Tom once. For Gatsby this is catastrophic — it means the past cannot be undone, the marriage cannot be erased, and his dream cannot be perfectly restored."},
-  {ch:7,type:'mc',q:"Who is driving Gatsby's car when Myrtle Wilson is struck and killed?",opts:["Tom Buchanan","Nick Carraway","Jay Gatsby","Daisy Buchanan"],ans:3,explanation:"Daisy is driving when the car strikes and kills Myrtle. She does not stop. Gatsby, in the passenger seat, says nothing. This act — and their shared silence afterward — sets in motion the final tragedy. Gatsby will later take responsibility to protect Daisy."},
+  {ch:7,type:'mc',q:"Who is driving Gatsby's car when Myrtle Wilson is struck and killed?",opts:["Tom Buchanan","Nick Carraway","Jay Gatsby","Daisy Buchanan"],ans:3,explanation:"Daisy is driving when the car strikes and kills Myrtle. She does not stop. Gatsby, in the passenger seat, says nothing. This moment is the moral turning point of the novel — an act of carelessness with no acknowledgment, no pause, no humanity from the driver."},
   {ch:7,type:'mc',q:"What is significant about the fact that Myrtle runs toward the car?",opts:["She mistakes it for Tom's car and runs toward it for help","She is trying to escape George Wilson","She is attempting suicide","She is chasing a stray dog"],ans:0,explanation:"Myrtle sees the yellow car — Tom's car — and runs toward it, believing Tom is driving and will save her from her oppressive life with George. The car is driven by Daisy, not Tom. The mistaken identity makes her death even more tragic: she ran toward her salvation and was killed by it."},
   {ch:7,type:'mc',q:"What does Gatsby do after the accident?",opts:["He drives to the police to confess","He flees the scene alone","He and Daisy return to East Egg, and Gatsby later keeps watch outside Daisy's house","He calls Wolfsheim for help"],ans:2,explanation:"After the accident, Gatsby and Daisy return to East Egg. Gatsby then stands outside the Buchanan house in the dark, watching, convinced Daisy needs protection — still hoping, still devoted. Tom, meanwhile, is inside with Daisy."},
   {ch:7,type:'mc',q:"What does Tom tell George Wilson about the yellow car?",opts:["That it belongs to Gatsby","That it was stolen","That it was in a police impound","That he sold it recently to a stranger"],ans:0,explanation:"Tom tells George Wilson — correctly — that the yellow car belongs to Gatsby. Whether he does so intending the consequences is ambiguous, but the effect is clear: George Wilson now believes Gatsby killed his wife, and he will act on that belief."},
@@ -2534,7 +2544,7 @@ const ALL_QUESTIONS = [
   {ch:7,type:'sa',q:"Why is it significant that Myrtle runs toward the car thinking it is Tom?",ans:"It is the novel's most concentrated irony: Myrtle has built a fantasy around Tom as her escape from a limited life, just as Gatsby has built a fantasy around Daisy. She runs toward her fantasy and is killed by it. Both Myrtle and Gatsby are destroyed by their dreams.",explanation:"Myrtle and Gatsby are mirror characters — both reach upward, both pursue someone from a higher class, both are destroyed by the careless rich they idealized. Myrtle's death by the car she associated with Tom makes this parallel explicit and brutal."},
   {ch:7,type:'sa',q:"What does the image of Tom and Daisy together in the kitchen — conspiring over cold fried chicken while Gatsby keeps watch outside — reveal about the relationship between wealth and moral consequence?",ans:"He sees Tom and Daisy together, eating cold food, looking comfortable and conspiratorial. It is significant because it reveals that Daisy has already chosen Tom, and that Gatsby, standing outside in the dark, is now entirely alone.",explanation:"The kitchen window image is one of the novel's most devastating. Gatsby thinks he is protecting Daisy; Daisy is inside being comforted by Tom. The two careless people have retreated into their shared world. Gatsby's vigil is not devotion returned — it is devotion ignored."},
   {ch:7,type:'sa',q:"How does Tom's behavior in Chapter 7 expose his hypocrisy?",ans:"Tom is currently having an ongoing affair with Myrtle yet is outraged by Gatsby's affair with Daisy. He positions himself as the defender of marriage and propriety while violating both. His double standard is not even hidden — it is simply not acknowledged.",explanation:"The hypocrisy is total and deliberate. Fitzgerald does not let Tom's affairs be forgotten: we know about Myrtle, we know Tom has had other affairs, we know his marriage is not what he claims to protect. His moral outrage at Gatsby is therefore pure performance — and everyone in the room knows it."},
-  {ch:7,type:'sa',q:"Why does Gatsby take the blame for the accident?",ans:"Because he loves Daisy and wants to protect her, and because taking responsibility is the natural extension of his total devotion to her. He has organized his entire life around her; absorbing her crime is simply one more thing he does in her name.",explanation:"Gatsby's willingness to take the blame is his final and most complete act of love — and his death warrant. He never considers the consequences for himself. Protecting Daisy is more important than his own safety, because without Daisy his life has no purpose anyway."},
+  {ch:7,type:'sa',q:"Why does Gatsby take the blame for the accident?",ans:"Because he loves Daisy and wants to protect her, and because taking responsibility is the natural extension of his total devotion to her. He has organized his entire life around her; absorbing her crime is simply one more thing he does in her name.",explanation:"Gatsby's willingness to take the blame is his most complete act of love. He never considers the consequences for himself. Protecting Daisy is more important than his own safety, because without Daisy his life has no purpose anyway. This is the fullest expression of a devotion that has always been absolute."},
   {ch:7,type:'sa',q:"What specifically does the Plaza Hotel confrontation expose about the limits of Gatsby's self-invention — and why is it Daisy's hesitation, not Tom's accusations, that does the real damage?",ans:"The Plaza confrontation exposes Gatsby's criminal wealth; Daisy's failure to choose him reveals the dream's impossibility; and Myrtle's death shows the lethal cost of the wealthy's carelessness. Every pillar of the dream collapses in a single afternoon.",explanation:"Chapter 7 is the novel's sustained demolition. The dream was always built on three things: wealth, Daisy, and the possibility of a different past. In this chapter, the wealth is exposed as criminal, Daisy proves she cannot be the vessel the dream requires, and the carelessness of the rich kills someone. The dream is over."},
   {ch:7,type:'sa',q:"What does the fact that Tom points George Wilson toward Gatsby — rather than protecting Daisy or correcting the record — reveal about Tom's moral character?",ans:"It reveals that Tom's primary concern is self-preservation. Rather than take responsibility for the situation his own infidelity created, he redirects Wilson's grief toward a convenient target. Tom sacrifices Gatsby without hesitation to protect himself and Daisy.",explanation:"Tom's decision to direct Wilson toward Gatsby is the moral nadir of his characterization. Whether or not he intends the full consequence, he knowingly channels a grieving, unstable man's rage at someone else. It is the most explicit act of carelessness in a novel full of careless people — using another person's death to avoid accountability for his own actions."},
   {ch:7,type:'sa',q:"How does the heat function as a literary device in Chapter 7?",ans:"The heat externalizes the escalating tensions among the characters. It makes physical what is emotional: the pressure, the friction, the inevitability of explosion. The confrontations at the Plaza and in the Valley of Ashes both feel like the breaking of a heat wave.",explanation:"Fitzgerald uses the heat to create a pressure-cooker effect. The characters are literally uncomfortable, which lowers inhibitions and raises aggression. The relentless temperature makes the confrontations feel inevitable — as if the weather itself is demanding a crisis."},
@@ -3685,8 +3695,10 @@ function showScreen(id) {
     if (id === 'home' || id === 'results') {
       next.classList.add('animate-in');
     }
+    // Reset scroll on the inner scroll container
+    const scroller = next.querySelector('.screen-scroll') || next;
+    scroller.scrollTop = 0;
   }, current && current !== next ? 200 : 0);
-  window.scrollTo(0, 0);
 }
 
 function startQuiz() {
