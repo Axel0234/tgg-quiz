@@ -1767,267 +1767,222 @@
       <stop offset="40%" stop-color="#00CC66" stop-opacity="0.4"/>
       <stop offset="100%" stop-color="#00CC66" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="ashGlow" cx="50%" cy="80%" r="60%">
-      <stop offset="0%" stop-color="#888880" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#888880" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="blur2">
-      <feGaussianBlur stdDeviation="2"/>
-    </filter>
-    <filter id="blur6">
-      <feGaussianBlur stdDeviation="6"/>
-    </filter>
-    <filter id="blur12">
-      <feGaussianBlur stdDeviation="12"/>
-    </filter>
-    <filter id="eyeGlow">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <clipPath id="screenClip">
-      <rect width="1440" height="900"/>
-    </clipPath>
+    <filter id="blur2"><feGaussianBlur stdDeviation="2"/></filter>
+    <filter id="blur6"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="blur12"><feGaussianBlur stdDeviation="12"/></filter>
   </defs>
 
-  <!-- Sky base -->
+  <!-- Sky -->
   <rect width="1440" height="900" fill="url(#skyGrad)"/>
 
-  <!-- Stars scattered -->
-  <g opacity="0.75">
-    <circle cx="120" cy="60" r="1.5" fill="#C9A84C" style="animation:twinkle 3.1s ease-in-out infinite"/><circle cx="240" cy="30" r="1.2" fill="white" style="animation:twinkle 2.4s ease-in-out 0.5s infinite"/>
-    <circle cx="380" cy="80" r="1.5" fill="white" style="animation:twinkle 3.8s ease-in-out 1s infinite"/><circle cx="500" cy="20" r="1" fill="#C9A84C" style="animation:twinkle 2.9s ease-in-out 0.3s infinite"/>
-    <circle cx="650" cy="55" r="1.8" fill="white" style="animation:twinkle 4.2s ease-in-out 0.8s infinite"/><circle cx="800" cy="35" r="1.2" fill="white" style="animation:twinkle 3.3s ease-in-out 1.5s infinite"/>
-    <circle cx="950" cy="70" r="1.5" fill="#C9A84C" style="animation:twinkle 2.7s ease-in-out 0.2s infinite"/><circle cx="1100" cy="25" r="1.3" fill="white" style="animation:twinkle 3.6s ease-in-out 0.9s infinite"/>
-    <circle cx="1250" cy="60" r="1.5" fill="white" style="animation:twinkle 4.0s ease-in-out 0.4s infinite"/><circle cx="1380" cy="40" r="1" fill="#C9A84C" style="animation:twinkle 2.5s ease-in-out 1.2s infinite"/>
-    <circle cx="70" cy="120" r="1" fill="white" style="animation:twinkle 3.4s ease-in-out 0.6s infinite"/><circle cx="310" cy="140" r="1.2" fill="white" style="animation:twinkle 2.8s ease-in-out 1.8s infinite"/>
-    <circle cx="460" cy="110" r="1" fill="#C9A84C" style="animation:twinkle 3.9s ease-in-out 0.1s infinite"/><circle cx="720" cy="130" r="1.3" fill="white" style="animation:twinkle 3.1s ease-in-out 1.1s infinite"/>
-    <circle cx="1050" cy="100" r="1" fill="white" style="animation:twinkle 4.5s ease-in-out 0.7s infinite"/><circle cx="1320" cy="115" r="1.5" fill="#C9A84C" style="animation:twinkle 2.6s ease-in-out 1.4s infinite"/>
-    <circle cx="170" cy="90" r="1" fill="white" style="animation:twinkle 3.7s ease-in-out 0.3s infinite"/><circle cx="850" cy="90" r="1.2" fill="#C9A84C" style="animation:twinkle 3.2s ease-in-out 1.6s infinite"/>
-    <circle cx="1180" cy="80" r="1" fill="white" style="animation:twinkle 4.1s ease-in-out 0.8s infinite"/><circle cx="420" cy="50" r="1" fill="white" style="animation:twinkle 2.9s ease-in-out 2.0s infinite"/>
-  </g>
-
-  <!-- ============================================================ -->
-  <!-- WATER / BAY (bottom band) -->
-  <!-- ============================================================ -->
-  <rect x="0" y="720" width="1440" height="180" fill="#050F1C" opacity="0.95"/>
-  <!-- water shimmer lines -->
-  <g opacity="0.3" stroke="#C9A84C" stroke-width="1">
-    <line x1="0" y1="745" x2="1440" y2="745"/>
-    <line x1="0" y1="768" x2="1440" y2="768"/>
-    <line x1="0" y1="792" x2="1440" y2="792"/>
-    <line x1="0" y1="818" x2="1440" y2="818"/>
-    <line x1="0" y1="848" x2="1440" y2="848"/>
-    <line x1="0" y1="875" x2="1440" y2="875"/>
-  </g>
-
-  <!-- ============================================================ -->
-  <!-- GREEN LIGHT — Daisy's dock, right side -->
-  <!-- ============================================================ -->
-  <circle cx="1310" cy="718" r="90" fill="url(#greenGlow)" filter="url(#blur12)"/>
-  <circle cx="1310" cy="718" r="45" fill="#00FF88" opacity="0.25" filter="url(#blur6)"/>
-  <!-- dock post -->
-  <rect x="1308" y="720" width="5" height="90" fill="#1A3828" opacity="1"/>
-  <!-- lamp housing -->
-  <rect x="1301" y="706" width="18" height="14" rx="2" fill="#1A3020"/>
-  <!-- green bulb glow -->
-  <circle cx="1310" cy="713" r="10" fill="#00FF88" opacity="0.8" filter="url(#blur2)" style="animation:twinkle 2s ease-in-out infinite"/>
-  <circle cx="1310" cy="713" r="5" fill="#CCFFDD" style="animation:twinkle 2s ease-in-out 0.3s infinite"/>
-  <!-- water reflection streak -->
-  <rect x="1308" y="722" width="5" height="80" fill="#00FF88" opacity="0.18" filter="url(#blur6)"/>
-  <ellipse cx="1310" cy="790" rx="22" ry="8" fill="#00FF88" opacity="0.2" filter="url(#blur6)"/>
-  <!-- label -->
-  <text x="1310" y="698" font-family="Georgia, serif" font-size="10" fill="#55FFAA" opacity="0.75" letter-spacing="2" text-anchor="middle" font-style="italic">Daisy's Dock</text>
-
-  <!-- ============================================================ -->
-  <!-- GATSBY'S MANSION — right background -->
-  <!-- ============================================================ -->
-  <g opacity="0.7">
-    <!-- main body -->
-    <rect x="980" y="490" width="340" height="230" fill="#1E3550"/>
-    <!-- pediment / roof -->
-    <polygon points="955,490 1150,395 1345,490" fill="#162840"/>
-    <!-- pediment gold trim -->
-    <line x1="975" y1="490" x2="1325" y2="490" stroke="#C9A84C" stroke-width="2" opacity="0.8"/>
-    <line x1="1005" y1="462" x2="1295" y2="462" stroke="#C9A84C" stroke-width="1" opacity="0.5"/>
-    <!-- columns -->
-    <rect x="1005" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
-    <rect x="1048" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
-    <rect x="1091" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
-    <rect x="1248" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
-    <rect x="1291" y="490" width="14" height="230" fill="#0F2030" opacity="0.9"/>
-    <!-- lit windows row 1 -->
-    <rect x="1028" y="515" width="32" height="44" fill="#E8C84A" opacity="0.7"/>
-    <rect x="1078" y="515" width="32" height="44" fill="#C9A84C" opacity="0.4"/>
-    <rect x="1128" y="515" width="32" height="44" fill="#E8C84A" opacity="0.7"/>
-    <rect x="1178" y="515" width="32" height="44" fill="#C9A84C" opacity="0.4"/>
-    <rect x="1228" y="515" width="32" height="44" fill="#E8C84A" opacity="0.7"/>
-    <!-- window glow bleed -->
-    <rect x="1028" y="515" width="32" height="44" fill="#FFD860" opacity="0.3" filter="url(#blur2)"/>
-    <rect x="1128" y="515" width="32" height="44" fill="#FFD860" opacity="0.3" filter="url(#blur2)"/>
-    <rect x="1228" y="515" width="32" height="44" fill="#FFD860" opacity="0.3" filter="url(#blur2)"/>
-    <!-- lit windows row 2 -->
-    <rect x="1028" y="588" width="32" height="40" fill="#C9A84C" opacity="0.45"/>
-    <rect x="1128" y="588" width="32" height="40" fill="#E8C84A" opacity="0.65"/>
-    <rect x="1228" y="588" width="32" height="40" fill="#C9A84C" opacity="0.45"/>
-    <!-- arched door -->
-    <rect x="1130" y="648" width="60" height="72" rx="30" fill="#0A1820"/>
-    <rect x="1130" y="648" width="60" height="72" rx="30" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.6"/>
-    <!-- ground line -->
-    <rect x="955" y="720" width="405" height="3" fill="#C9A84C" opacity="0.6"/>
-  </g>
-  <!-- warm gold glow behind mansion -->
-  <ellipse cx="1150" cy="580" rx="220" ry="150" fill="#C9A84C" opacity="0.08" filter="url(#blur12)"/>
-
-  <!-- ============================================================ -->
-  <!-- VALLEY OF ASHES — left side -->
-  <!-- ============================================================ -->
-  <!-- grey ash clouds -->
-  <ellipse cx="260" cy="620" rx="300" ry="130" fill="#3A3A35" opacity="0.6"/>
-  <ellipse cx="160" cy="680" rx="200" ry="90" fill="#2E2E2A" opacity="0.65"/>
-  <ellipse cx="420" cy="660" rx="180" ry="70" fill="#353530" opacity="0.5"/>
-  <!-- ash mounds / ground -->
-  <ellipse cx="100" cy="730" rx="130" ry="45" fill="#252520" opacity="0.85"/>
-  <ellipse cx="300" cy="738" rx="170" ry="40" fill="#282823" opacity="0.8"/>
-  <ellipse cx="480" cy="726" rx="150" ry="35" fill="#252520" opacity="0.75"/>
-  <!-- industrial smokestacks -->
-  <rect x="55" y="530" width="26" height="200" fill="#1A1A16" opacity="0.95"/>
-  <rect x="118" y="558" width="22" height="172" fill="#1C1C18" opacity="0.9"/>
-  <rect x="194" y="540" width="24" height="190" fill="#1A1A16" opacity="0.92"/>
-  <rect x="338" y="548" width="20" height="180" fill="#1C1C18" opacity="0.8"/>
-  <!-- stack caps -->
-  <rect x="51" y="528" width="34" height="8" fill="#252520" opacity="0.95"/>
-  <rect x="114" y="554" width="30" height="8" fill="#252520" opacity="0.9"/>
-  <rect x="190" y="537" width="32" height="8" fill="#252520" opacity="0.92"/>
-  <rect x="334" y="545" width="28" height="8" fill="#252520" opacity="0.8"/>
-  <!-- smoke puffs -->
-  <circle cx="71" cy="520" r="28" fill="#4A4A44" opacity="0.7" filter="url(#blur6)" style="animation:ashDrift 6s ease-in-out infinite"/>
-  <circle cx="52" cy="500" r="20" fill="#3E3E38" opacity="0.55" filter="url(#blur6)" style="animation:ashDrift 8s ease-in-out 1s infinite"/>
-  <circle cx="129" cy="548" r="24" fill="#444440" opacity="0.65" filter="url(#blur6)" style="animation:ashDrift 7s ease-in-out 0.5s infinite"/>
-  <circle cx="206" cy="530" r="26" fill="#4A4A44" opacity="0.7" filter="url(#blur6)" style="animation:ashDrift 9s ease-in-out 2s infinite"/>
-  <circle cx="190" cy="510" r="18" fill="#3E3E38" opacity="0.5" filter="url(#blur6)" style="animation:ashDrift 6.5s ease-in-out 1.5s infinite"/>
-  <circle cx="348" cy="538" r="22" fill="#404040" opacity="0.6" filter="url(#blur6)" style="animation:ashDrift 7.5s ease-in-out 0.8s infinite"/>
-  <!-- label -->
-  <text x="220" y="800" font-family="Georgia, serif" font-size="11" fill="#AAA890" opacity="0.7" letter-spacing="3" text-anchor="middle" font-style="italic">Valley of Ashes</text>
-
-  <!-- ============================================================ -->
-  <!-- DR. T.J. ECKLEBURG BILLBOARD — center -->
-  <!-- ============================================================ -->
-  <!-- billboard posts -->
-  <rect x="514" y="545" width="12" height="185" fill="#2A2010" opacity="0.95"/>
-  <rect x="574" y="545" width="12" height="185" fill="#2A2010" opacity="0.95"/>
-  <!-- billboard board — warm aged yellow-white -->
-  <rect x="476" y="330" width="148" height="220" rx="3" fill="#E8D8A0" opacity="0.92"/>
-  <!-- faded age staining -->
-  <rect x="476" y="330" width="148" height="220" rx="3" fill="#8B6914" opacity="0.25"/>
-  <!-- board border -->
-  <rect x="476" y="330" width="148" height="220" rx="3" fill="none" stroke="#8B6010" stroke-width="3" opacity="0.8"/>
-  <rect x="482" y="336" width="136" height="208" rx="2" fill="none" stroke="#8B6010" stroke-width="1" opacity="0.4"/>
-
-  <!-- T.J. ECKLEBURG text at top of board -->
-  <text x="550" y="356" font-family="Georgia, serif" font-size="13" fill="#3A2800" opacity="0.9" letter-spacing="2" text-anchor="middle" font-weight="bold">T. J. ECKLEBURG</text>
-  <text x="550" y="372" font-family="Georgia, serif" font-size="8" fill="#5A3800" opacity="0.75" letter-spacing="3" text-anchor="middle">OCULIST · NEW YORK</text>
-
-  <!-- SPECTACLES — large and visible -->
-  <g opacity="0.95">
-    <!-- spectacle frames -->
-    <circle cx="522" cy="445" r="34" fill="none" stroke="#3A2800" stroke-width="4"/>
-    <circle cx="578" cy="445" r="34" fill="none" stroke="#3A2800" stroke-width="4"/>
-    <!-- nose bridge -->
-    <line x1="556" y1="445" x2="544" y2="445" stroke="#3A2800" stroke-width="4"/>
-    <!-- temple arms -->
-    <line x1="488" y1="445" x2="478" y2="440" stroke="#3A2800" stroke-width="3.5"/>
-    <line x1="612" y1="445" x2="622" y2="440" stroke="#3A2800" stroke-width="3.5"/>
-    <!-- lens fill — pale blue-grey like faded paint -->
-    <circle cx="522" cy="445" r="33" fill="#C8D4B8" opacity="0.55"/>
-    <circle cx="578" cy="445" r="33" fill="#C8D4B8" opacity="0.55"/>
-    <!-- irises — faded golden-brown -->
-    <circle cx="522" cy="445" r="20" fill="#8B7A30" opacity="0.85"/>
-    <circle cx="578" cy="445" r="20" fill="#8B7A30" opacity="0.85"/>
-    <!-- iris ring detail -->
-    <circle cx="522" cy="445" r="20" fill="none" stroke="#C4A840" stroke-width="1.5" opacity="0.6"/>
-    <circle cx="578" cy="445" r="20" fill="none" stroke="#C4A840" stroke-width="1.5" opacity="0.6"/>
-    <!-- pupils -->
-    <circle cx="522" cy="445" r="10" fill="#1A1200"/>
-    <circle cx="578" cy="445" r="10" fill="#1A1200"/>
-    <!-- iris spokes -->
-    <line x1="522" y1="427" x2="522" y2="463" stroke="#C4A840" stroke-width="1" opacity="0.5"/>
-    <line x1="504" y1="445" x2="540" y2="445" stroke="#C4A840" stroke-width="1" opacity="0.5"/>
-    <line x1="509" y1="432" x2="535" y2="458" stroke="#C4A840" stroke-width="0.8" opacity="0.4"/>
-    <line x1="535" y1="432" x2="509" y2="458" stroke="#C4A840" stroke-width="0.8" opacity="0.4"/>
-    <line x1="578" y1="427" x2="578" y2="463" stroke="#C4A840" stroke-width="1" opacity="0.5"/>
-    <line x1="560" y1="445" x2="596" y2="445" stroke="#C4A840" stroke-width="1" opacity="0.5"/>
-    <line x1="565" y1="432" x2="591" y2="458" stroke="#C4A840" stroke-width="0.8" opacity="0.4"/>
-    <line x1="591" y1="432" x2="565" y2="458" stroke="#C4A840" stroke-width="0.8" opacity="0.4"/>
-    <!-- specular highlights -->
-    <circle cx="514" cy="437" r="4" fill="white" opacity="0.4"/>
-    <circle cx="570" cy="437" r="4" fill="white" opacity="0.4"/>
-  </g>
-  <!-- bottom caption -->
-  <text x="550" y="535" font-family="Georgia, serif" font-size="9" fill="#3A2800" opacity="0.65" letter-spacing="1" text-anchor="middle" font-style="italic">Eyes of God watch over all</text>
-
-  <!-- ============================================================ -->
-  <!-- ART DECO CORNER ORNAMENTS -->
-  <!-- ============================================================ -->
-  <g opacity="0.55" stroke="#C9A84C" stroke-width="1.2" fill="none">
-    <!-- top-left -->
-    <line x1="0" y1="44" x2="130" y2="44"/><line x1="44" y1="0" x2="44" y2="130"/>
-    <rect x="22" y="22" width="66" height="66"/><rect x="30" y="30" width="50" height="50"/>
-    <circle cx="55" cy="55" r="14"/><polygon points="55,41 69,55 55,69 41,55"/>
-    <!-- top-right -->
-    <line x1="1440" y1="44" x2="1310" y2="44"/><line x1="1396" y1="0" x2="1396" y2="130"/>
-    <rect x="1352" y="22" width="66" height="66"/><rect x="1360" y="30" width="50" height="50"/>
-    <circle cx="1385" cy="55" r="14"/><polygon points="1385,41 1399,55 1385,69 1371,55"/>
-    <!-- bottom-left -->
-    <line x1="0" y1="856" x2="130" y2="856"/><line x1="44" y1="900" x2="44" y2="770"/>
-    <rect x="22" y="812" width="66" height="66"/><rect x="30" y="820" width="50" height="50"/>
-    <circle cx="55" cy="845" r="14"/><polygon points="55,831 69,845 55,859 41,845"/>
-    <!-- bottom-right -->
-    <line x1="1440" y1="856" x2="1310" y2="856"/><line x1="1396" y1="900" x2="1396" y2="770"/>
-    <rect x="1352" y="812" width="66" height="66"/><rect x="1360" y="820" width="50" height="50"/>
-    <circle cx="1385" cy="845" r="14"/><polygon points="1385,831 1399,845 1385,859 1371,845"/>
-  </g>
-
-  <!-- ============================================================ -->
-  <!-- GOLD DECO HORIZONTAL BANDS -->
-  <!-- ============================================================ -->
-  <line x1="0" y1="720" x2="1440" y2="720" stroke="#C9A84C" stroke-width="1.5" opacity="0.5"/>
-  <line x1="0" y1="725" x2="1440" y2="725" stroke="#C9A84C" stroke-width="0.5" opacity="0.25"/>
-
-  <!-- ============================================================ -->
-  <!-- SCATTERED DECO DIAMONDS -->
-  <!-- ============================================================ -->
-  <g fill="#C9A84C" opacity="0.35">
-    <rect x="790" y="148" width="10" height="10" transform="rotate(45 795 153)"/>
-    <rect x="860" y="248" width="8" height="8" transform="rotate(45 864 252)"/>
-    <rect x="700" y="298" width="7" height="7" transform="rotate(45 703 301)"/>
-    <rect x="900" y="178" width="9" height="9" transform="rotate(45 904 182)"/>
-    <rect x="150" y="198" width="8" height="8" transform="rotate(45 154 202)"/>
-    <rect x="1200" y="298" width="9" height="9" transform="rotate(45 1204 302)"/>
-    <rect x="1350" y="198" width="7" height="7" transform="rotate(45 1353 201)"/>
-    <rect x="400" y="278" width="8" height="8" transform="rotate(45 404 282)"/>
-    <rect x="750" y="200" width="6" height="6" transform="rotate(45 753 203)"/>
-    <rect x="1050" y="160" width="7" height="7" transform="rotate(45 1053 163)"/>
-  </g>
-
-  <!-- ============================================================ -->
-  <!-- NICK'S BUNGALOW — far left -->
-  <!-- ============================================================ -->
+  <!-- Stars — left margin only (x < 360) and right margin only (x > 1080) -->
   <g opacity="0.65">
-    <rect x="28" y="655" width="90" height="65" fill="#1E3348"/>
-    <polygon points="18,655 73,622 138,655" fill="#152838"/>
-    <line x1="18" y1="655" x2="138" y2="655" stroke="#C9A84C" stroke-width="1.5" opacity="0.6"/>
-    <rect x="46" y="668" width="20" height="26" fill="#E8C84A" opacity="0.6"/>
-    <rect x="82" y="668" width="20" height="26" fill="#C9A84C" opacity="0.35"/>
-    <rect x="65" y="688" width="18" height="32" fill="#0A1520"/>
+    <circle cx="50"  cy="55"  r="1.5" fill="#C9A84C" style="animation:twinkle 3.1s ease-in-out infinite"/>
+    <circle cx="130" cy="28"  r="1.2" fill="white"   style="animation:twinkle 2.4s ease-in-out 0.5s infinite"/>
+    <circle cx="210" cy="78"  r="1.5" fill="white"   style="animation:twinkle 3.8s ease-in-out 1s infinite"/>
+    <circle cx="300" cy="18"  r="1"   fill="#C9A84C" style="animation:twinkle 2.9s ease-in-out 0.3s infinite"/>
+    <circle cx="75"  cy="115" r="1"   fill="white"   style="animation:twinkle 3.4s ease-in-out 0.6s infinite"/>
+    <circle cx="180" cy="135" r="1.2" fill="white"   style="animation:twinkle 2.8s ease-in-out 1.8s infinite"/>
+    <circle cx="340" cy="105" r="1"   fill="#C9A84C" style="animation:twinkle 3.9s ease-in-out 0.1s infinite"/>
+    <circle cx="260" cy="160" r="1.3" fill="white"   style="animation:twinkle 3.1s ease-in-out 1.1s infinite"/>
+    <circle cx="100" cy="88"  r="1"   fill="white"   style="animation:twinkle 3.7s ease-in-out 0.3s infinite"/>
+    <circle cx="28"  cy="170" r="1.2" fill="#C9A84C" style="animation:twinkle 3.2s ease-in-out 1.6s infinite"/>
+    <circle cx="155" cy="52"  r="1"   fill="white"   style="animation:twinkle 4.0s ease-in-out 0.9s infinite"/>
+    <circle cx="320" cy="200" r="1"   fill="#C9A84C" style="animation:twinkle 2.7s ease-in-out 0.4s infinite"/>
+    <circle cx="1100" cy="42"  r="1.5" fill="white"   style="animation:twinkle 4.2s ease-in-out 0.8s infinite"/>
+    <circle cx="1210" cy="28"  r="1.2" fill="white"   style="animation:twinkle 3.3s ease-in-out 1.5s infinite"/>
+    <circle cx="1330" cy="68"  r="1.5" fill="#C9A84C" style="animation:twinkle 2.7s ease-in-out 0.2s infinite"/>
+    <circle cx="1415" cy="22"  r="1.3" fill="white"   style="animation:twinkle 3.6s ease-in-out 0.9s infinite"/>
+    <circle cx="1140" cy="112" r="1"   fill="white"   style="animation:twinkle 4.5s ease-in-out 0.7s infinite"/>
+    <circle cx="1375" cy="96"  r="1.5" fill="#C9A84C" style="animation:twinkle 2.6s ease-in-out 1.4s infinite"/>
+    <circle cx="1250" cy="152" r="1"   fill="white"   style="animation:twinkle 4.1s ease-in-out 0.8s infinite"/>
+    <circle cx="1090" cy="165" r="1.2" fill="#C9A84C" style="animation:twinkle 2.9s ease-in-out 2.0s infinite"/>
+    <circle cx="1430" cy="145" r="1"   fill="white"   style="animation:twinkle 3.5s ease-in-out 0.4s infinite"/>
+    <circle cx="1170" cy="58"  r="1"   fill="white"   style="animation:twinkle 4.0s ease-in-out 1.2s infinite"/>
+    <circle cx="1310" cy="190" r="1.1" fill="#C9A84C" style="animation:twinkle 3.0s ease-in-out 0.6s infinite"/>
   </g>
 
-  <!-- green light water reflection streak -->
-  <rect x="1307" y="723" width="7" height="120" fill="#00FF88" opacity="0.1" filter="url(#blur6)"/>
-  <ellipse cx="1310" cy="830" rx="16" ry="6" fill="#00FF88" opacity="0.15" filter="url(#blur6)"/>
+  <!-- Water / Bay (full width bottom band) -->
+  <rect x="0" y="718" width="1440" height="182" fill="#050F1C" opacity="0.95"/>
+  <g opacity="0.22" stroke="#C9A84C" stroke-width="1">
+    <line x1="0" y1="742" x2="1440" y2="742"/>
+    <line x1="0" y1="766" x2="1440" y2="766"/>
+    <line x1="0" y1="792" x2="1440" y2="792"/>
+    <line x1="0" y1="820" x2="1440" y2="820"/>
+    <line x1="0" y1="852" x2="1440" y2="852"/>
+  </g>
+  <line x1="0" y1="718" x2="1440" y2="718" stroke="#C9A84C" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- ============================================================ -->
+  <!-- LEFT MARGIN: VALLEY OF ASHES + ECKLEBURG — x: 0–360         -->
+  <!-- ============================================================ -->
+
+  <!-- Ash clouds — kept within x:0-360 -->
+  <ellipse cx="140" cy="635" rx="160" ry="95"  fill="#3A3A35" opacity="0.55"/>
+  <ellipse cx="60"  cy="685" rx="100" ry="65"  fill="#2E2E2A" opacity="0.60"/>
+  <ellipse cx="280" cy="660" rx="120" ry="58"  fill="#353530" opacity="0.40"/>
+
+  <!-- Ash mounds -->
+  <ellipse cx="50"  cy="730" rx="85"  ry="32" fill="#252520" opacity="0.85"/>
+  <ellipse cx="180" cy="735" rx="115" ry="30" fill="#282823" opacity="0.80"/>
+  <ellipse cx="320" cy="726" rx="90"  ry="26" fill="#252520" opacity="0.70"/>
+
+  <!-- Smokestacks (x: 20–310) -->
+  <rect x="22"  y="548" width="22" height="187" fill="#1A1A16" opacity="0.95"/>
+  <rect x="78"  y="568" width="18" height="167" fill="#1C1C18" opacity="0.90"/>
+  <rect x="148" y="552" width="20" height="183" fill="#1A1A16" opacity="0.92"/>
+  <rect x="268" y="562" width="17" height="173" fill="#1C1C18" opacity="0.80"/>
+
+  <!-- Stack caps -->
+  <rect x="18"  y="545" width="30" height="6" fill="#252520" opacity="0.95"/>
+  <rect x="74"  y="565" width="26" height="6" fill="#252520" opacity="0.90"/>
+  <rect x="144" y="549" width="28" height="6" fill="#252520" opacity="0.92"/>
+  <rect x="264" y="559" width="24" height="6" fill="#252520" opacity="0.80"/>
+
+  <!-- Smoke puffs -->
+  <circle cx="33"  cy="538" r="24" fill="#4A4A44" opacity="0.60" filter="url(#blur6)" style="animation:ashDrift 6s ease-in-out infinite"/>
+  <circle cx="18"  cy="522" r="16" fill="#3E3E38" opacity="0.45" filter="url(#blur6)" style="animation:ashDrift 8s ease-in-out 1s infinite"/>
+  <circle cx="88"  cy="558" r="20" fill="#444440" opacity="0.55" filter="url(#blur6)" style="animation:ashDrift 7s ease-in-out 0.5s infinite"/>
+  <circle cx="158" cy="542" r="22" fill="#4A4A44" opacity="0.60" filter="url(#blur6)" style="animation:ashDrift 9s ease-in-out 2s infinite"/>
+  <circle cx="278" cy="550" r="18" fill="#404040" opacity="0.50" filter="url(#blur6)" style="animation:ashDrift 7.5s ease-in-out 0.8s infinite"/>
+
+  <!-- Eckleburg Billboard — centered at x:190, safely within left margin -->
+  <!-- Posts -->
+  <rect x="178" y="382" width="9"  height="222" fill="#2A2010" opacity="0.95"/>
+  <rect x="228" y="382" width="9"  height="222" fill="#2A2010" opacity="0.95"/>
+  <!-- Board face -->
+  <rect x="150" y="188" width="136" height="196" rx="3" fill="#E8D8A0" opacity="0.85"/>
+  <rect x="150" y="188" width="136" height="196" rx="3" fill="#8B6914" opacity="0.18"/>
+  <rect x="150" y="188" width="136" height="196" rx="3" fill="none" stroke="#8B6010" stroke-width="3" opacity="0.70"/>
+  <rect x="156" y="194" width="124" height="184" rx="2" fill="none" stroke="#8B6010" stroke-width="1" opacity="0.30"/>
+
+  <!-- Spectacles (no text) -->
+  <g opacity="0.90">
+    <circle cx="195" cy="308" r="30" fill="none" stroke="#3A2800" stroke-width="4"/>
+    <circle cx="246" cy="308" r="30" fill="none" stroke="#3A2800" stroke-width="4"/>
+    <line x1="225" y1="308" x2="216" y2="308" stroke="#3A2800" stroke-width="4"/>
+    <line x1="165" y1="308" x2="156" y2="303" stroke="#3A2800" stroke-width="3.5"/>
+    <line x1="276" y1="308" x2="285" y2="303" stroke="#3A2800" stroke-width="3.5"/>
+    <circle cx="195" cy="308" r="29" fill="#C8D4B8" opacity="0.45"/>
+    <circle cx="246" cy="308" r="29" fill="#C8D4B8" opacity="0.45"/>
+    <circle cx="195" cy="308" r="17" fill="#8B7A30" opacity="0.80"/>
+    <circle cx="246" cy="308" r="17" fill="#8B7A30" opacity="0.80"/>
+    <circle cx="195" cy="308" r="17" fill="none" stroke="#C4A840" stroke-width="1.5" opacity="0.50"/>
+    <circle cx="246" cy="308" r="17" fill="none" stroke="#C4A840" stroke-width="1.5" opacity="0.50"/>
+    <circle cx="195" cy="308" r="8"  fill="#1A1200"/>
+    <circle cx="246" cy="308" r="8"  fill="#1A1200"/>
+    <!-- iris detail lines -->
+    <line x1="195" y1="293" x2="195" y2="323" stroke="#C4A840" stroke-width="0.8" opacity="0.40"/>
+    <line x1="180" y1="308" x2="210" y2="308" stroke="#C4A840" stroke-width="0.8" opacity="0.40"/>
+    <line x1="184" y1="297" x2="206" y2="319" stroke="#C4A840" stroke-width="0.7" opacity="0.30"/>
+    <line x1="206" y1="297" x2="184" y2="319" stroke="#C4A840" stroke-width="0.7" opacity="0.30"/>
+    <line x1="246" y1="293" x2="246" y2="323" stroke="#C4A840" stroke-width="0.8" opacity="0.40"/>
+    <line x1="231" y1="308" x2="261" y2="308" stroke="#C4A840" stroke-width="0.8" opacity="0.40"/>
+    <line x1="235" y1="297" x2="257" y2="319" stroke="#C4A840" stroke-width="0.7" opacity="0.30"/>
+    <line x1="257" y1="297" x2="235" y2="319" stroke="#C4A840" stroke-width="0.7" opacity="0.30"/>
+    <circle cx="188" cy="300" r="3.5" fill="white" opacity="0.35"/>
+    <circle cx="239" cy="300" r="3.5" fill="white" opacity="0.35"/>
+  </g>
+
+  <!-- Nick's Bungalow — bottom-left, below the ash zone, x:18-125 -->
+  <g opacity="0.62">
+    <rect x="18"  y="662" width="82" height="56" fill="#1E3348"/>
+    <polygon points="8,662 57,634 128,662" fill="#152838"/>
+    <line x1="8" y1="662" x2="128" y2="662" stroke="#C9A84C" stroke-width="1.5" opacity="0.50"/>
+    <rect x="32"  y="673" width="17" height="22" fill="#E8C84A" opacity="0.52"/>
+    <rect x="66"  y="673" width="17" height="22" fill="#C9A84C" opacity="0.28"/>
+    <rect x="55"  y="692" width="14" height="26" fill="#0A1520"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- RIGHT MARGIN: GATSBY'S MANSION + GREEN LIGHT — x: 1080–1440  -->
+  <!-- ============================================================ -->
+
+  <!-- Warm glow behind mansion -->
+  <ellipse cx="1255" cy="580" rx="200" ry="135" fill="#C9A84C" opacity="0.06" filter="url(#blur12)"/>
+
+  <!-- Gatsby's Mansion (x: 1080–1430) -->
+  <g opacity="0.72">
+    <!-- Body -->
+    <rect x="1080" y="492" width="330" height="228" fill="#1E3550"/>
+    <!-- Roof -->
+    <polygon points="1058,492 1245,402 1432,492" fill="#162840"/>
+    <!-- Roofline gold trim -->
+    <line x1="1075" y1="492" x2="1415" y2="492" stroke="#C9A84C" stroke-width="2"   opacity="0.72"/>
+    <line x1="1102" y1="467" x2="1388" y2="467" stroke="#C9A84C" stroke-width="0.8" opacity="0.40"/>
+    <!-- Columns -->
+    <rect x="1102" y="492" width="12" height="228" fill="#0F2030" opacity="0.90"/>
+    <rect x="1143" y="492" width="12" height="228" fill="#0F2030" opacity="0.90"/>
+    <rect x="1184" y="492" width="12" height="228" fill="#0F2030" opacity="0.90"/>
+    <rect x="1332" y="492" width="12" height="228" fill="#0F2030" opacity="0.90"/>
+    <rect x="1373" y="492" width="12" height="228" fill="#0F2030" opacity="0.90"/>
+    <!-- Windows row 1 -->
+    <rect x="1122" y="518" width="28" height="40" fill="#E8C84A" opacity="0.66"/>
+    <rect x="1168" y="518" width="28" height="40" fill="#C9A84C" opacity="0.36"/>
+    <rect x="1214" y="518" width="28" height="40" fill="#E8C84A" opacity="0.66"/>
+    <rect x="1260" y="518" width="28" height="40" fill="#C9A84C" opacity="0.36"/>
+    <rect x="1306" y="518" width="28" height="40" fill="#E8C84A" opacity="0.66"/>
+    <!-- Window glow -->
+    <rect x="1122" y="518" width="28" height="40" fill="#FFD860" opacity="0.25" filter="url(#blur2)"/>
+    <rect x="1214" y="518" width="28" height="40" fill="#FFD860" opacity="0.25" filter="url(#blur2)"/>
+    <rect x="1306" y="518" width="28" height="40" fill="#FFD860" opacity="0.25" filter="url(#blur2)"/>
+    <!-- Windows row 2 -->
+    <rect x="1122" y="582" width="28" height="36" fill="#C9A84C" opacity="0.40"/>
+    <rect x="1214" y="582" width="28" height="36" fill="#E8C84A" opacity="0.60"/>
+    <rect x="1306" y="582" width="28" height="36" fill="#C9A84C" opacity="0.40"/>
+    <!-- Arched door -->
+    <rect x="1220" y="648" width="54" height="72" rx="27" fill="#0A1820"/>
+    <rect x="1220" y="648" width="54" height="72" rx="27" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.50"/>
+    <!-- Ground line -->
+    <rect x="1058" y="718" width="382" height="3" fill="#C9A84C" opacity="0.50"/>
+  </g>
+
+  <!-- Green light — Daisy's dock, far right -->
+  <circle cx="1418" cy="716" r="80"  fill="url(#greenGlow)" filter="url(#blur12)"/>
+  <circle cx="1418" cy="716" r="38"  fill="#00FF88" opacity="0.20" filter="url(#blur6)"/>
+  <rect   x="1416" y="718" width="5" height="84"  fill="#1A3828" opacity="1"/>
+  <rect   x="1409" y="705" width="16" height="13" rx="2" fill="#1A3020"/>
+  <circle cx="1418" cy="712" r="8"   fill="#00FF88" opacity="0.75" filter="url(#blur2)" style="animation:twinkle 2s ease-in-out infinite"/>
+  <circle cx="1418" cy="712" r="4.5" fill="#CCFFDD" style="animation:twinkle 2s ease-in-out 0.3s infinite"/>
+  <rect   x="1416" y="720" width="5" height="72"  fill="#00FF88" opacity="0.12" filter="url(#blur6)"/>
+  <ellipse cx="1418" cy="784" rx="18" ry="6"      fill="#00FF88" opacity="0.16" filter="url(#blur6)"/>
+
+  <!-- ============================================================ -->
+  <!-- ART DECO CORNER ORNAMENTS — pushed to outer corners only     -->
+  <!-- ============================================================ -->
+  <g opacity="0.38" stroke="#C9A84C" stroke-width="1.2" fill="none">
+    <!-- top-left (within x:0-80, y:0-80) -->
+    <line x1="0"    y1="38"  x2="80"  y2="38"/><line x1="38"  y1="0"   x2="38"  y2="80"/>
+    <rect x="14"   y="14"   width="48" height="48"/>
+    <circle cx="38" cy="38"  r="10"/>
+    <!-- top-right (within x:1360-1440, y:0-80) -->
+    <line x1="1440" y1="38"  x2="1360" y2="38"/><line x1="1402" y1="0"   x2="1402" y2="80"/>
+    <rect x="1378"  y="14"   width="48" height="48"/>
+    <circle cx="1402" cy="38" r="10"/>
+    <!-- bottom-left (within x:0-80, y:820-900) -->
+    <line x1="0"    y1="862" x2="80"  y2="862"/><line x1="38"  y1="900" x2="38"  y2="820"/>
+    <rect x="14"   y="838"   width="48" height="48"/>
+    <circle cx="38" cy="862"  r="10"/>
+    <!-- bottom-right (within x:1360-1440, y:820-900) -->
+    <line x1="1440" y1="862" x2="1360" y2="862"/><line x1="1402" y1="900" x2="1402" y2="820"/>
+    <rect x="1378"  y="838"  width="48" height="48"/>
+    <circle cx="1402" cy="862" r="10"/>
+  </g>
+
+  <!-- Scattered deco diamonds — margins only, well clear of center -->
+  <g fill="#C9A84C" opacity="0.28">
+    <rect x="120" y="195" width="8" height="8" transform="rotate(45 124 199)"/>
+    <rect x="295" y="155" width="6" height="6" transform="rotate(45 298 158)"/>
+    <rect x="52"  y="285" width="7" height="7" transform="rotate(45 55  288)"/>
+    <rect x="240" y="420" width="6" height="6" transform="rotate(45 243 423)"/>
+    <rect x="330" y="340" width="6" height="6" transform="rotate(45 333 343)"/>
+    <rect x="1100" y="175" width="8" height="8" transform="rotate(45 1104 179)"/>
+    <rect x="1290" y="245" width="7" height="7" transform="rotate(45 1293 248)"/>
+    <rect x="1388" y="155" width="6" height="6" transform="rotate(45 1391 158)"/>
+    <rect x="1160" y="315" width="7" height="7" transform="rotate(45 1163 318)"/>
+    <rect x="1075" y="415" width="6" height="6" transform="rotate(45 1078 418)"/>
+    <rect x="1355" y="375" width="6" height="6" transform="rotate(45 1358 378)"/>
+  </g>
 
 </svg>
 </div>
